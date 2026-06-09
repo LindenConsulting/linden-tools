@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software-Kostenkalkulator – Linden Consulting</title>
+<meta name="description" content="Berechne deine aktuellen Software-Kosten und entdecke Einsparpotenziale mit dem Kalkulator von Linden Consulting.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--rot:#e42421;--schwarz:#111;--weiss:#fff;--grau:#f5f5f5;--grau2:#e8e8e8;--text:#222;--gedaempft:#666;--radius:12px}
+body{font-family:'Inter',sans-serif;background:var(--grau);color:var(--text);min-height:100vh}
+header{background:var(--schwarz);color:var(--weiss);padding:16px 32px;display:flex;align-items:center;gap:12px}
+.logo-mark{background:var(--rot);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:600}
+.logo-sub{font-size:11px;color:#888;letter-spacing:.5px;text-transform:uppercase}
+.container{max-width:900px;margin:0 auto;padding:32px 24px}
+h1{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+h1 span{color:var(--rot)}
+.subtitle{color:var(--gedaempft);font-size:15px;margin-bottom:32px}
+.summary-bar{background:var(--weiss);border-radius:var(--radius);padding:20px 24px;display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px;border:1px solid var(--grau2);position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.sum-item{display:flex;flex-direction:column;gap:2px}
+.sum-label{font-size:11px;color:var(--gedaempft);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+.sum-val{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.sum-val.red{color:var(--rot)}
+.sum-val.green{color:#1a7a3f}
+.cat-block{background:var(--weiss);border-radius:var(--radius);margin-bottom:16px;border:1px solid var(--grau2);overflow:hidden}
+.cat-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.cat-title{font-size:15px;font-weight:600}
+.cat-total{font-size:14px;font-weight:600;color:var(--rot)}
+.cat-body{padding:0 20px 16px;display:none}
+.cat-body.open{display:block}
+.tool-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--grau);flex-wrap:wrap}
+.tool-row:last-child{border-bottom:none}
+.tool-check{width:18px;height:18px;accent-color:var(--rot);cursor:pointer;flex-shrink:0}
+.tool-name{flex:1;font-size:14px;min-width:140px}
+.tool-name.checked{font-weight:500}
+.price-field{width:90px;padding:6px 10px;border:1px solid var(--grau2);border-radius:6px;font-size:13px;font-family:inherit;text-align:right}
+.users-field{width:70px;padding:6px 10px;border:1px solid var(--grau2);border-radius:6px;font-size:13px;font-family:inherit;text-align:right}
+.field-label{font-size:11px;color:var(--gedaempft);white-space:nowrap}
+.tool-subtotal{font-size:13px;font-weight:600;width:80px;text-align:right;color:var(--rot)}
+.savings-box{background:linear-gradient(135deg,#fff8f8,#fff);border:2px solid var(--rot);border-radius:var(--radius);padding:24px;margin:28px 0}
+.savings-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--rot)}
+.savings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.savings-item{background:var(--weiss);border-radius:8px;padding:16px;border:1px solid var(--grau2)}
+.savings-item .val{font-size:24px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+.savings-item .lbl{font-size:12px;color:var(--gedaempft)}
+.foerder-box{background:var(--weiss);border:1px solid var(--grau2);border-radius:var(--radius);padding:24px;margin-bottom:28px}
+.foerder-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.foerder-badge{background:var(--rot);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase}
+.foerder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.foerder-item{background:var(--grau);border-radius:8px;padding:16px}
+.foerder-item h4{font-size:13px;font-weight:600;margin-bottom:8px}
+.foerder-item p{font-size:12px;color:var(--gedaempft);line-height:1.5}
+.foerder-item .highlight{font-size:18px;font-weight:700;color:var(--rot);margin-bottom:4px}
+.cta-box{background:var(--schwarz);color:var(--weiss);border-radius:var(--radius);padding:28px;text-align:center;margin-bottom:40px}
+.cta-box h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.cta-box p{color:#aaa;font-size:14px;margin-bottom:20px;line-height:1.6}
+.cta-btn{display:inline-block;background:var(--rot);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s}
+.cta-btn:hover{background:#b81c19}
+.chevron{transition:transform .2s;font-size:12px}
+.open .chevron{transform:rotate(180deg)}
+@media(max-width:600px){.summary-bar{gap:16px}.foerder-grid{grid-template-columns:1fr}.tool-row{gap:8px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-mark">LC</div>
+  <div><div class="logo-text">Linden Consulting</div><div class="logo-sub">Software-Kostenkalkulator</div></div>
+</header>
+<div class="container">
+  <h1>Was kosten deine <span>Tools</span> wirklich?</h1>
+  <p class="subtitle">Aktiviere deine aktuellen Software-Tools, passe Preise und Nutzerzahl an – und sieh sofort dein Einsparpotenzial.</p>
+
+  <div class="summary-bar" id="summaryBar">
+    <div class="sum-item"><div class="sum-label">Monatliche Kosten</div><div class="sum-val red" id="sumMonat">0 €</div></div>
+    <div class="sum-item"><div class="sum-label">Jährliche Kosten</div><div class="sum-val red" id="sumJahr">0 €</div></div>
+    <div class="sum-item"><div class="sum-label">Einsparpotenzial / Jahr</div><div class="sum-val green" id="sumSpar">0 €</div></div>
+    <div class="sum-item"><div class="sum-label">Aktive Tools</div><div class="sum-val" id="sumTools">0</div></div>
+  </div>
+
+  <div id="categories"></div>
+
+  <div class="savings-box" id="savingsBox" style="display:none">
+    <div class="savings-title">💡 Dein Einsparpotenzial auf einen Blick</div>
+    <div class="savings-grid">
+      <div class="savings-item"><div class="val" id="s1">–</div><div class="lbl">Aktuelle Kosten / Monat</div></div>
+      <div class="savings-item"><div class="val" id="s2">–</div><div class="lbl">Mögliche Einsparung / Monat (25%)</div></div>
+      <div class="savings-item"><div class="val" id="s3">–</div><div class="lbl">Einsparung / Jahr</div></div>
+      <div class="savings-item"><div class="val" id="s4">–</div><div class="lbl">Einsparung in 3 Jahren</div></div>
+    </div>
+  </div>
+
+  <div class="foerder-box">
+    <div class="foerder-title">Förderprogramme <span class="foerder-badge">Hessen</span></div>
+    <div class="foerder-grid">
+      <div class="foerder-item">
+        <h4>INQA-Coaching</h4>
+        <div class="highlight">bis 11.520 €</div>
+        <p>80 % Förderung, bis zu 12 Beratungstage, eigener Anteil: 2.880 €</p>
+      </div>
+      <div class="foerder-item">
+        <h4>RKW Hessen</h4>
+        <div class="highlight">bis 7.500 €</div>
+        <p>Bis zu 50 % Förderung, bis zu 15 Beratungstage</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Bereit für den nächsten Schritt?</h3>
+    <p>Lass uns gemeinsam analysieren, welche Tools sich wirklich lohnen – und wie Zoho deine digitalen Geschäftsabläufe vereinfacht.</p>
+    <a class="cta-btn" href="mailto:info@karolinlinden.de">Kostenloses Erstgespräch anfragen →</a>
+  </div>
+</div>
+
+<script>
+const CATS = [
+  {id:'crm',label:'Vertrieb & CRM',tools:[
+    {n:'Salesforce Sales Cloud',p:25},{n:'HubSpot CRM',p:15},{n:'Microsoft Dynamics 365',p:61},
+    {n:'Pipedrive',p:14},{n:'Monday.com CRM',p:12},{n:'Zoho CRM',p:14},{n:'Bitrix24',p:10}]},
+  {id:'mktg',label:'Marketing',tools:[
+    {n:'HubSpot Marketing Hub',p:15},{n:'Mailchimp',p:13},{n:'ActiveCampaign',p:29},
+    {n:'Brevo (Sendinblue)',p:9},{n:'Klaviyo',p:20}]},
+  {id:'office',label:'Office & Produktivität',tools:[
+    {n:'Microsoft 365 Business',p:12.50},{n:'Google Workspace',p:5.75},
+    {n:'Notion Team',p:10},{n:'Dropbox Business',p:15}]},
+  {id:'project',label:'Projektmanagement',tools:[
+    {n:'Asana Business',p:24.99},{n:'Monday.com',p:12},{n:'ClickUp',p:7},
+    {n:'Trello Standard',p:5},{n:'Zoho Projects',p:4}]},
+  {id:'hr',label:'HR & Personal',tools:[
+    {n:'Personio',p:8},{n:'BambooHR',p:6},{n:'Factorial',p:5},{n:'Zoho People',p:1.25}]},
+  {id:'finance',label:'Finanzen & Buchhaltung',tools:[
+    {n:'DATEV',p:50},{n:'Lexoffice',p:17},{n:'sevDesk',p:15},{n:'Zoho Books',p:15}]},
+  {id:'support',label:'Kundenservice',tools:[
+    {n:'Zendesk',p:55},{n:'Freshdesk',p:15},{n:'Zoho Desk',p:14},{n:'Intercom',p:74}]},
+  {id:'dms',label:'Dokumentenmanagement',tools:[
+    {n:'DocuWare',p:30},{n:'Microsoft SharePoint',p:5},{n:'Zoho WorkDrive',p:4},{n:'Box Business',p:15}]},
+];
+
+const state = {};
+CATS.forEach(c => { state[c.id] = {}; c.tools.forEach(t => { state[c.id][t.n] = {checked:false,price:t.p,users:1}; }); });
+
+function eur(v){return v.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
+
+function render(){
+  const container = document.getElementById('categories');
+  container.innerHTML = '';
+  CATS.forEach(cat => {
+    const catTotal = Object.values(state[cat.id]).reduce((s,t)=>s+(t.checked?t.price*t.users:0),0);
+    const div = document.createElement('div');
+    div.className = 'cat-block';
+    div.innerHTML = `
+      <div class="cat-header" onclick="toggleCat('${cat.id}',this)">
+        <span class="cat-title">${cat.label}</span>
+        <span style="display:flex;align-items:center;gap:12px">
+          <span class="cat-total">${catTotal>0?eur(catTotal)+'/Mo.':''}</span>
+          <span class="chevron">▼</span>
+        </span>
+      </div>
+      <div class="cat-body" id="body-${cat.id}">
+        ${cat.tools.map(t=>{
+          const s = state[cat.id][t.n];
+          return `<div class="tool-row">
+            <input type="checkbox" class="tool-check" ${s.checked?'checked':''} onchange="toggle('${cat.id}','${t.n}',this.checked)">
+            <span class="tool-name ${s.checked?'checked':''}">${t.n}</span>
+            <span class="field-label">€/Nutzer/Mo.</span>
+            <input class="price-field" type="number" value="${s.price}" min="0" step="0.5" onchange="setPrice('${cat.id}','${t.n}',this.value)" ${!s.checked?'disabled':''}>
+            <span class="field-label">Nutzer</span>
+            <input class="users-field" type="number" value="${s.users}" min="1" onchange="setUsers('${cat.id}','${t.n}',this.value)" ${!s.checked?'disabled':''}>
+            <span class="tool-subtotal">${s.checked?eur(s.price*s.users):''}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+  updateSummary();
+}
+
+function toggleCat(id, header){
+  const body = document.getElementById('body-'+id);
+  body.classList.toggle('open');
+  header.querySelector('.chevron').style.transform = body.classList.contains('open')?'rotate(180deg)':'';
+}
+
+function toggle(cat,name,checked){
+  state[cat][name].checked = checked;
+  render();
+}
+function setPrice(cat,name,val){
+  state[cat][name].price = parseFloat(val)||0;
+  render();
+}
+function setUsers(cat,name,val){
+  state[cat][name].users = parseInt(val)||1;
+  render();
+}
+
+function updateSummary(){
+  let total = 0, count = 0;
+  CATS.forEach(c=>{ Object.values(state[c.id]).forEach(t=>{ if(t.checked){total+=t.price*t.users;count++;} }); });
+  const spar = total*0.25;
+  document.getElementById('sumMonat').textContent = eur(total);
+  document.getElementById('sumJahr').textContent = eur(total*12);
+  document.getElementById('sumSpar').textContent = eur(spar*12);
+  document.getElementById('sumTools').textContent = count;
+  const box = document.getElementById('savingsBox');
+  if(count>0){
+    box.style.display='block';
+    document.getElementById('s1').textContent=eur(total);
+    document.getElementById('s2').textContent=eur(spar);
+    document.getElementById('s3').textContent=eur(spar*12);
+    document.getElementById('s4').textContent=eur(spar*36);
+  } else { box.style.display='none'; }
+}
+
+render();
+</script>
+</body>
+</html>

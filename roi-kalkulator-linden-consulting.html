@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI-Kalkulator – Linden Consulting</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--rot:#e42421;--schwarz:#111;--weiss:#fff;--grau:#f5f5f5;--grau2:#e8e8e8;--radius:12px;--gedaempft:#666}
+body{font-family:'Inter',sans-serif;background:var(--grau);color:#222;min-height:100vh}
+header{background:var(--schwarz);color:#fff;padding:16px 32px;display:flex;align-items:center;gap:12px}
+.logo-mark{background:var(--rot);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:600}
+.logo-sub{font-size:11px;color:#888;letter-spacing:.5px;text-transform:uppercase}
+.wrap{max-width:960px;margin:0 auto;padding:32px 24px}
+h1{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+h1 span{color:var(--rot)}
+.sub{color:var(--gedaempft);font-size:15px;margin-bottom:32px}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.panel{background:#fff;border-radius:var(--radius);padding:24px;border:1px solid var(--grau2)}
+.panel h3{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--gedaempft);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--grau)}
+.slider-row{margin-bottom:20px}
+.slider-row label{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;margin-bottom:8px;color:#333}
+.slider-row label span{font-size:15px;font-weight:700;color:var(--rot)}
+input[type=range]{width:100%;accent-color:var(--rot);height:4px;cursor:pointer}
+.results{display:flex;flex-direction:column;gap:12px;position:sticky;top:20px}
+.res-card{background:#fff;border-radius:var(--radius);padding:20px;border:1px solid var(--grau2)}
+.res-card.highlight{background:var(--schwarz);color:#fff;border-color:var(--schwarz)}
+.res-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--gedaempft);margin-bottom:6px;font-weight:500}
+.res-card.highlight .res-label{color:#888}
+.res-val{font-size:28px;font-weight:700;letter-spacing:-1px;color:var(--rot)}
+.res-card.highlight .res-val{color:#fff}
+.res-sub{font-size:12px;color:var(--gedaempft);margin-top:4px}
+.res-card.highlight .res-sub{color:#888}
+.breakdown{font-size:12px;color:var(--gedaempft);margin-top:10px;line-height:1.8}
+.breakdown span{color:var(--rot);font-weight:600}
+.chart-wrap{margin-top:24px;background:#fff;border-radius:var(--radius);padding:24px;border:1px solid var(--grau2)}
+.chart-wrap h3{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--gedaempft);margin-bottom:16px}
+.chart-box{height:220px;position:relative}
+.cta-box{background:var(--schwarz);color:#fff;border-radius:var(--radius);padding:28px;text-align:center;margin-top:24px}
+.cta-box h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.cta-box p{color:#aaa;font-size:14px;margin-bottom:20px;line-height:1.6}
+.cta-btn{display:inline-block;background:var(--rot);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.results{position:static}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-mark">LC</div>
+  <div><div class="logo-text">Linden Consulting</div><div class="logo-sub">ROI-Kalkulator</div></div>
+</header>
+<div class="wrap">
+  <h1>Dein <span>ROI</span> in Echtzeit</h1>
+  <p class="sub">Bewege die Regler und sieh sofort, wann sich deine Investition amortisiert.</p>
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <h3>Mitarbeiter & Kosten</h3>
+        <div class="slider-row">
+          <label>Betroffene Mitarbeiter <span id="v-ma">5</span></label>
+          <input type="range" id="ma" min="1" max="50" value="5" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Ø Stundenlohn (€) <span id="v-lohn">28 €</span></label>
+          <input type="range" id="lohn" min="15" max="80" value="28" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Zeitersparnis pro MA/Woche (h) <span id="v-zeit">3 h</span></label>
+          <input type="range" id="zeit" min="0.5" max="15" step="0.5" value="3" oninput="upd()">
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>Fehlerkosten & Effizienz</h3>
+        <div class="slider-row">
+          <label>Monatliche Fehlerkosten heute (€) <span id="v-fehler">2.000 €</span></label>
+          <input type="range" id="fehler" min="0" max="20000" step="100" value="2000" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Fehlerreduktion durch neue Abläufe (%) <span id="v-fred">35 %</span></label>
+          <input type="range" id="fred" min="0" max="80" value="35" oninput="upd()">
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>Software & Investition</h3>
+        <div class="slider-row">
+          <label>Aktuelle Software-Kosten/Mo. (€) <span id="v-altsw">500 €</span></label>
+          <input type="range" id="altsw" min="0" max="5000" step="50" value="500" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Neue Software-Kosten/Mo. (€) <span id="v-neusw">300 €</span></label>
+          <input type="range" id="neusw" min="0" max="5000" step="50" value="300" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Implementierungs- & Beratungskosten (€) <span id="v-impl">8.000 €</span></label>
+          <input type="range" id="impl" min="0" max="50000" step="500" value="8000" oninput="upd()">
+        </div>
+        <div class="slider-row">
+          <label>Förderung / Zuschuss (€) <span id="v-foerd">5.000 €</span></label>
+          <input type="range" id="foerd" min="0" max="15000" step="500" value="5000" oninput="upd()">
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <h3>Break-even-Verlauf (36 Monate)</h3>
+        <div class="chart-box"><canvas id="myChart"></canvas></div>
+      </div>
+    </div>
+    <div class="results">
+      <div class="res-card highlight">
+        <div class="res-label">Jährliche Einsparung</div>
+        <div class="res-val" id="r-spar">–</div>
+        <div class="breakdown" id="r-breakdown"></div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">Amortisation</div>
+        <div class="res-val" id="r-amort">–</div>
+        <div class="res-sub">Monate bis Break-even</div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">ROI nach 3 Jahren</div>
+        <div class="res-val" id="r-roi">–</div>
+        <div class="res-sub">Prozentualer Gesamtgewinn</div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">Nettonutzen (3 Jahre)</div>
+        <div class="res-val" id="r-net">–</div>
+        <div class="res-sub">Nach Abzug aller Kosten</div>
+      </div>
+    </div>
+  </div>
+  <div class="cta-box">
+    <h3>Bereit für den nächsten Schritt?</h3>
+    <p>Lass uns gemeinsam die konkreten Zahlen für dein Unternehmen ermitteln – kostenlos und unverbindlich.</p>
+    <a class="cta-btn" href="mailto:info@karolinlinden.de">Erstgespräch anfragen →</a>
+  </div>
+</div>
+<script>
+let chart;
+function eur(v){return v.toLocaleString('de-DE',{maximumFractionDigits:0})+' €';}
+function pct(v){return v.toFixed(0)+' %';}
+function monate(v){return v<=0?'sofort':v>=36?'>36 Mo.':v.toFixed(1)+' Mo.';}
+
+function upd(){
+  const ma=+document.getElementById('ma').value;
+  const lohn=+document.getElementById('lohn').value;
+  const zeit=+document.getElementById('zeit').value;
+  const fehler=+document.getElementById('fehler').value;
+  const fred=+document.getElementById('fred').value/100;
+  const altsw=+document.getElementById('altsw').value;
+  const neusw=+document.getElementById('neusw').value;
+  const impl=+document.getElementById('impl').value;
+  const foerd=+document.getElementById('foerd').value;
+
+  document.getElementById('v-ma').textContent=ma;
+  document.getElementById('v-lohn').textContent=lohn+' €';
+  document.getElementById('v-zeit').textContent=zeit+' h';
+  document.getElementById('v-fehler').textContent=eur(fehler);
+  document.getElementById('v-fred').textContent=Math.round(fred*100)+' %';
+  document.getElementById('v-altsw').textContent=eur(altsw);
+  document.getElementById('v-neusw').textContent=eur(neusw);
+  document.getElementById('v-impl').textContent=eur(impl);
+  document.getElementById('v-foerd').textContent=eur(foerd);
+
+  const zeitMo = ma*lohn*zeit*4.33;
+  const fehlerMo = fehler*fred;
+  const swMo = altsw-neusw;
+  const sparMo = zeitMo+fehlerMo+swMo;
+  const sparJahr = sparMo*12;
+  const invest = impl-foerd;
+  const net3 = sparJahr*3-invest;
+  const roi = invest>0?(net3/invest*100):0;
+  const amort = sparMo>0?invest/sparMo:99;
+
+  document.getElementById('r-spar').textContent=eur(sparJahr);
+  document.getElementById('r-breakdown').innerHTML=
+    `Zeit: <span>${eur(zeitMo*12)}</span> · Fehler: <span>${eur(fehlerMo*12)}</span> · Software: <span>${eur(swMo*12)}</span>`;
+  document.getElementById('r-amort').textContent=monate(amort);
+  document.getElementById('r-roi').textContent=pct(roi);
+  document.getElementById('r-net').textContent=eur(net3);
+
+  // Chart
+  const labels=Array.from({length:37},(_,i)=>i===0?'Start':'Mo.'+i);
+  const data=Array.from({length:37},(_,i)=>sparMo*i-invest);
+  const colors=data.map(v=>v>=0?'rgba(26,122,63,0.7)':'rgba(228,36,33,0.7)');
+
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('myChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {data,backgroundColor:colors,borderRadius:3,borderSkipped:false},
+      {data:Array(37).fill(0),type:'line',borderColor:'rgba(0,0,0,0.3)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:0},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.datasetIndex===1?'Break-even':eur(c.parsed.y)}}},
+      scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:7,font:{size:10}}},y:{ticks:{callback:v=>eur(v),font:{size:10}}}}}
+  });
+}
+upd();
+</script>
+</body>
+</html>
