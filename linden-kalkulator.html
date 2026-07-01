@@ -58,8 +58,7 @@ h1 span{color:var(--rot)}
 .cta-box p{color:#aaa;font-size:14px;margin-bottom:20px;line-height:1.6}
 .cta-btn{display:inline-block;background:var(--rot);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s}
 .cta-btn:hover{background:#b81c19}
-.chevron{transition:transform .2s;font-size:12px}
-.open .chevron{transform:rotate(180deg)}
+.chevron{transition:transform .2s;font-size:12px;display:inline-block}
 @media(max-width:600px){.summary-bar{gap:16px}.foerder-grid{grid-template-columns:1fr}.tool-row{gap:8px}}
 </style>
 </head>
@@ -97,12 +96,12 @@ h1 span{color:var(--rot)}
       <div class="foerder-item">
         <h4>INQA-Coaching</h4>
         <div class="highlight">bis 11.520 €</div>
-        <p>80 % Förderung, bis zu 12 Beratungstage, eigener Anteil: 2.880 €</p>
+        <p>80 % Förderung auf 14.400 € Gesamtkosten, bis zu 12 Beratungstage, eigener Anteil: 2.880 €</p>
       </div>
       <div class="foerder-item">
-        <h4>RKW Hessen</h4>
-        <div class="highlight">bis 7.500 €</div>
-        <p>Bis zu 50 % Förderung, bis zu 15 Beratungstage</p>
+        <h4>BAFA Unternehmensberatung</h4>
+        <div class="highlight">2 × 1.750 €</div>
+        <p>50 % Förderung auf die Beratungskosten – bis zu 1.750 € Zuschuss pro Beratungseinheit</p>
       </div>
     </div>
   </div>
@@ -139,36 +138,42 @@ const CATS = [
 ];
 
 const state = {};
-CATS.forEach(c => { state[c.id] = {}; c.tools.forEach(t => { state[c.id][t.n] = {checked:false,price:t.p,users:1}; }); });
+const openCats = new Set(); // ← merkt sich, welche Kategorien offen sind
 
-function eur(v){return v.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
+CATS.forEach(c => {
+  state[c.id] = {};
+  c.tools.forEach(t => { state[c.id][t.n] = {checked:false, price:t.p, users:1}; });
+});
+
+function eur(v){ return v.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 
 function render(){
   const container = document.getElementById('categories');
   container.innerHTML = '';
   CATS.forEach(cat => {
-    const catTotal = Object.values(state[cat.id]).reduce((s,t)=>s+(t.checked?t.price*t.users:0),0);
+    const catTotal = Object.values(state[cat.id]).reduce((s,t) => s + (t.checked ? t.price*t.users : 0), 0);
+    const isOpen = openCats.has(cat.id); // ← offen lassen, wenn vorher offen
     const div = document.createElement('div');
     div.className = 'cat-block';
     div.innerHTML = `
       <div class="cat-header" onclick="toggleCat('${cat.id}',this)">
         <span class="cat-title">${cat.label}</span>
         <span style="display:flex;align-items:center;gap:12px">
-          <span class="cat-total">${catTotal>0?eur(catTotal)+'/Mo.':''}</span>
-          <span class="chevron">▼</span>
+          <span class="cat-total">${catTotal > 0 ? eur(catTotal)+'/Mo.' : ''}</span>
+          <span class="chevron" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}">▼</span>
         </span>
       </div>
-      <div class="cat-body" id="body-${cat.id}">
-        ${cat.tools.map(t=>{
+      <div class="cat-body${isOpen ? ' open' : ''}" id="body-${cat.id}">
+        ${cat.tools.map(t => {
           const s = state[cat.id][t.n];
           return `<div class="tool-row">
-            <input type="checkbox" class="tool-check" ${s.checked?'checked':''} onchange="toggle('${cat.id}','${t.n}',this.checked)">
-            <span class="tool-name ${s.checked?'checked':''}">${t.n}</span>
-            <span class="field-label">€/Nutzer/Mo.</span>
-            <input class="price-field" type="number" value="${s.price}" min="0" step="0.5" onchange="setPrice('${cat.id}','${t.n}',this.value)" ${!s.checked?'disabled':''}>
+            <input type="checkbox" class="tool-check" ${s.checked ? 'checked' : ''} onchange="toggle('${cat.id}','${t.n}',this.checked)">
+            <span class="tool-name ${s.checked ? 'checked' : ''}">${t.n}</span>
+            <input class="price-field" type="number" value="${s.price}" min="0" step="0.5" onchange="setPrice('${cat.id}','${t.n}',this.value)" ${!s.checked ? 'disabled' : ''}>
+            <span class="field-label">€ im Monat</span>
+            <input class="users-field" type="number" value="${s.users}" min="1" step="1" onchange="setUsers('${cat.id}','${t.n}',this.value)" ${!s.checked ? 'disabled' : ''}>
             <span class="field-label">Nutzer</span>
-            <input class="users-field" type="number" value="${s.users}" min="1" onchange="setUsers('${cat.id}','${t.n}',this.value)" ${!s.checked?'disabled':''}>
-            <span class="tool-subtotal">${s.checked?eur(s.price*s.users):''}</span>
+            <span class="tool-subtotal">${s.checked ? eur(s.price*s.users) : ''}</span>
           </div>`;
         }).join('')}
       </div>`;
@@ -178,40 +183,43 @@ function render(){
 }
 
 function toggleCat(id, header){
+  if(openCats.has(id)){ openCats.delete(id); } else { openCats.add(id); }
   const body = document.getElementById('body-'+id);
   body.classList.toggle('open');
-  header.querySelector('.chevron').style.transform = body.classList.contains('open')?'rotate(180deg)':'';
+  header.querySelector('.chevron').style.transform = body.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
 }
 
-function toggle(cat,name,checked){
+function toggle(cat, name, checked){
   state[cat][name].checked = checked;
+  render(); // ← openCats sorgt dafür, dass die Kategorie offen bleibt
+}
+function setPrice(cat, name, val){
+  state[cat][name].price = parseFloat(val) || 0;
   render();
 }
-function setPrice(cat,name,val){
-  state[cat][name].price = parseFloat(val)||0;
-  render();
-}
-function setUsers(cat,name,val){
-  state[cat][name].users = parseInt(val)||1;
+function setUsers(cat, name, val){
+  state[cat][name].users = Math.max(1, Math.round(parseFloat(val))) || 1;
   render();
 }
 
 function updateSummary(){
   let total = 0, count = 0;
-  CATS.forEach(c=>{ Object.values(state[c.id]).forEach(t=>{ if(t.checked){total+=t.price*t.users;count++;} }); });
-  const spar = total*0.25;
+  CATS.forEach(c => { Object.values(state[c.id]).forEach(t => { if(t.checked){ total += t.price*t.users; count++; } }); });
+  const spar = total * 0.25;
   document.getElementById('sumMonat').textContent = eur(total);
   document.getElementById('sumJahr').textContent = eur(total*12);
   document.getElementById('sumSpar').textContent = eur(spar*12);
   document.getElementById('sumTools').textContent = count;
   const box = document.getElementById('savingsBox');
-  if(count>0){
-    box.style.display='block';
-    document.getElementById('s1').textContent=eur(total);
-    document.getElementById('s2').textContent=eur(spar);
-    document.getElementById('s3').textContent=eur(spar*12);
-    document.getElementById('s4').textContent=eur(spar*36);
-  } else { box.style.display='none'; }
+  if(count > 0){
+    box.style.display = 'block';
+    document.getElementById('s1').textContent = eur(total);
+    document.getElementById('s2').textContent = eur(spar);
+    document.getElementById('s3').textContent = eur(spar*12);
+    document.getElementById('s4').textContent = eur(spar*36);
+  } else {
+    box.style.display = 'none';
+  }
 }
 
 render();
