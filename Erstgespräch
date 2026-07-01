@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Erstgespräch – Linden Consulting</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --r:   #e42421;
+      --rl:  #c11d1a;
+      --rp:  #FFF0F0;
+      --rm:  #FBCFCE;
+      --t:   #000000;
+      --tm:  #444444;
+      --ts:  #777777;
+      --b:   #E5E5E5;
+      --bg:  #ffffff;
+      --bgs: #F8F8F8;
+      --rad: 10px;
+      --sh:  0 2px 12px rgba(228,36,33,.07);
+      --f:   'Inter', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--f); background: var(--bgs); color: var(--t); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+    /* ── HEADER ── */
+    header { background: #fff; border-bottom: 1px solid var(--b); position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .nav-inner { max-width: 1060px; margin: 0 auto; padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 42px; width: auto; }
+    .nav-logo span { font-size: 17px; font-weight: 700; color: var(--r); }
+    nav { display: flex; gap: 4px; }
+    nav a { text-decoration: none; font-size: 13px; font-weight: 500; color: var(--tm); padding: 7px 11px; border-radius: 7px; transition: all .18s; }
+    nav a:hover { background: var(--rp); color: var(--r); }
+    nav a.cta { background: var(--r); color: #fff; font-weight: 600; }
+    nav a.cta:hover { background: var(--rl); }
+    /* ── HERO ── */
+    .hero { background: #fff; border-bottom: 1px solid var(--b); padding: 32px 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .hero-left { display: flex; flex-direction: column; gap: 4px; }
+    .eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ts); }
+    .hero h1 { font-size: clamp(20px, 2.8vw, 28px); font-weight: 800; line-height: 1.2; }
+    .hero h1 em { color: var(--r); font-style: normal; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--rp); border: 1px solid var(--rm); border-radius: 8px; padding: 7px 14px; font-size: 14px; font-weight: 600; color: var(--r); margin-top: 10px; min-height: 36px; }
+    .hero-badge .lbl { font-weight: 400; color: var(--ts); }
+    .hero-right img { height: 50px; width: auto; }
+    .hero-right p { font-size: 11px; color: var(--ts); margin-top: 5px; text-align: right; }
+    @media(max-width:560px){ .hero { flex-direction: column-reverse; } .hero-right { text-align: center; } .hero-right p { text-align: center; } }
+    /* ── PROGRESS ── */
+    .prog-bar { background: #fff; border-bottom: 1px solid var(--b); padding: 14px 24px; }
+    .prog-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; }
+    .prog-step { display: flex; align-items: center; gap: 7px; flex: 1; }
+    .prog-step:last-child { flex: none; }
+    .prog-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--b); background: #fff; color: var(--ts); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .25s; }
+    .prog-dot.active { border-color: var(--r); background: var(--r); color: #fff; }
+    .prog-dot.done { border-color: var(--r); background: var(--rp); color: var(--r); }
+    .prog-lbl { font-size: 11px; font-weight: 500; color: var(--ts); white-space: nowrap; }
+    .prog-lbl.active { color: var(--r); font-weight: 700; }
+    .prog-line { flex: 1; height: 2px; background: var(--b); margin: 0 5px; transition: background .25s; }
+    .prog-line.done { background: var(--rm); }
+    @media(max-width:580px){ .prog-lbl { display: none; } .prog-line { margin: 0 3px; } }
+    /* ── WRAP ── */
+    .wrap { max-width: 740px; margin: 28px auto 80px; padding: 0 20px; }
+    /* ── PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+    /* ── CARD ── */
+    .card { background: #fff; border: 1px solid var(--b); border-radius: var(--rad); padding: 26px; box-shadow: var(--sh); margin-bottom: 18px; }
+    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+    .card-sub { font-size: 13px; color: var(--ts); margin-bottom: 20px; }
+    /* ── FIELDS ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field > label { display: block; font-size: 13px; font-weight: 600; color: var(--tm); margin-bottom: 5px; }
+    .field > label small { font-weight: 400; color: var(--ts); }
+    input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], select, textarea {
+      width: 100%; background: var(--bgs); border: 1.5px solid var(--b); color: var(--t); font-family: var(--f);
+      font-size: 14px; padding: 9px 12px; border-radius: 8px; outline: none; appearance: none; transition: border .18s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--r); background: #fff; }
+    input.invalid, select.invalid { border-color: var(--r); background: var(--rp); }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media(max-width:500px){ .g2 { grid-template-columns: 1fr; } }
+    /* ── SEC HEADER ── */
+    .sec { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--ts); margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .sec::after { content: ''; flex: 1; height: 1px; background: var(--b); }
+    /* ── CHECKBOXES ── */
+    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    @media(max-width:440px){ .chk-grid { grid-template-columns: 1fr; } }
+    .chk-item { display: flex; align-items: center; gap: 9px; padding: 8px 11px; background: var(--bgs); border: 1.5px solid var(--b); border-radius: 8px; cursor: pointer; transition: all .15s; user-select: none; }
+    .chk-item:hover { border-color: var(--r); }
+    .chk-item input[type=checkbox] { display: none; }
+    .chk-box { width: 17px; height: 17px; border: 2px solid var(--b); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+    .chk-item input:checked ~ .chk-box { background: var(--r); border-color: var(--r); }
+    .chk-item input:checked ~ .chk-box::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 800; }
+    .chk-item input:checked ~ .chk-lbl { color: var(--r); font-weight: 600; }
+    .chk-item.sel { border-color: var(--r); background: var(--rp); }
+    .chk-lbl { font-size: 13px; color: var(--tm); }
+    /* ── MODULE PILLS ── */
+    .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    .pill { display: flex; align-items: center; gap: 5px; padding: 7px 12px; background: var(--bgs); border: 1.5px solid var(--b); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--tm); transition: all .15s; user-select: none; }
+    .pill input[type=checkbox] { display: none; }
+    .pill:hover { border-color: var(--r); }
+    .pill.sel { border-color: var(--r); background: var(--rp); color: var(--r); font-weight: 600; }
+    /* ── WERTSÄULE SECTION (Step 4) ── */
+    .wert-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    @media(max-width:500px){ .wert-row { grid-template-columns: 1fr; } }
+    .mult-card { background: var(--bgs); border: 1.5px solid var(--b); border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+    .mult-card .mc-label { font-size: 12px; color: var(--ts); margin-bottom: 2px; }
+    .mult-card .mc-val { font-size: 15px; font-weight: 700; color: var(--t); }
+    .mult-card .mc-mult { font-size: 18px; font-weight: 800; color: var(--r); }
+    .mult-card.highlight { border-color: var(--rm); background: var(--rp); }
+    .slider-val { text-align: center; font-size: 17px; font-weight: 700; color: var(--r); margin-bottom: 7px; }
+    input[type=range] { width: 100%; accent-color: var(--r); }
+    .slider-lbls { display: flex; justify-content: space-between; font-size: 11px; color: var(--ts); margin-top: 4px; }
+    .price-box { background: var(--rp); border: 1.5px solid var(--rm); border-radius: var(--rad); padding: 20px; margin-top: 18px; }
+    .price-box-top { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--r); margin-bottom: 12px; }
+    .price-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    @media(max-width:460px){ .price-phases { grid-template-columns: 1fr; } }
+    .phase-chip { background: #fff; border: 1px solid var(--rm); border-radius: 8px; padding: 10px 12px; text-align: center; }
+    .phase-chip .pc-name { font-size: 11px; font-weight: 700; color: var(--ts); text-transform: uppercase; letter-spacing: .06em; }
+    .phase-chip .pc-h { font-size: 12px; color: var(--ts); margin: 3px 0; }
+    .phase-chip .pc-price { font-size: 17px; font-weight: 800; color: var(--r); }
+    .price-total-row { border-top: 1px solid var(--rm); padding-top: 12px; display: flex; justify-content: space-between; align-items: baseline; }
+    .price-total-lbl { font-size: 13px; color: var(--tm); }
+    .price-total-val { font-size: 28px; font-weight: 800; color: var(--r); letter-spacing: -1px; }
+    .price-range { font-size: 12px; color: var(--ts); margin-top: 4px; text-align: right; }
+    .price-breakdown { background: #fff; border: 1px solid var(--b); border-radius: 8px; margin-top: 12px; overflow: hidden; }
+    .bd-row { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 12px; border-bottom: 1px solid var(--b); }
+    .bd-row:last-child { border-bottom: none; font-weight: 700; }
+    .bd-val { font-weight: 600; }
+    /* ── BUTTONS ── */
+    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 10px; }
+    .btn-back { background: #fff; border: 1.5px solid var(--b); color: var(--tm); font-family: var(--f); font-size: 14px; font-weight: 600; padding: 11px 20px; border-radius: 8px; cursor: pointer; transition: all .18s; }
+    .btn-back:hover { border-color: var(--r); color: var(--r); }
+    .btn-next { background: var(--r); border: none; color: #fff; font-family: var(--f); font-size: 14px; font-weight: 700; padding: 11px 26px; border-radius: 8px; cursor: pointer; transition: background .18s; }
+    .btn-next:hover { background: var(--rl); }
+    /* ── RESULT ── */
+    #step-result { display: none; }
+    .res-tabs { display: flex; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
+    .res-tab { padding: 8px 16px; border-radius: 7px; border: 1.5px solid var(--b); background: #fff; font-family: var(--f); font-size: 13px; font-weight: 600; cursor: pointer; color: var(--tm); transition: all .18s; }
+    .res-tab.active { border-color: var(--r); background: var(--r); color: #fff; }
+    .res-panel { display: none; }
+    .res-panel.active { display: block; }
+    .email-box { background: #fff; border: 1px solid var(--b); border-radius: var(--rad); overflow: hidden; box-shadow: var(--sh); }
+    .email-hd { background: var(--bgs); padding: 14px 18px; border-bottom: 1px solid var(--b); }
+    .email-hd p { font-size: 12px; color: var(--tm); margin-bottom: 3px; }
+    .email-hd strong { font-size: 14px; }
+    .email-body { padding: 24px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
+    .email-foot { padding: 14px 18px; border-top: 1px solid var(--b); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .email-hint { font-size: 11px; color: var(--ts); width: 100%; margin-top: 2px; }
+    .proj-box { background: #fff; border: 1px solid var(--b); border-radius: var(--rad); overflow: hidden; box-shadow: var(--sh); }
+    .proj-hd { background: var(--r); color: #fff; padding: 14px 18px; }
+    .proj-hd h3 { font-size: 15px; font-weight: 700; }
+    .proj-hd p { font-size: 12px; opacity: .85; margin-top: 3px; }
+    .phase-block { padding: 18px; border-bottom: 1px solid var(--b); }
+    .phase-block:last-child { border-bottom: none; }
+    .phase-title { font-size: 12px; font-weight: 700; color: var(--r); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .phase-title::after { content: ''; flex: 1; height: 1px; background: var(--rm); }
+    .task-row { display: flex; gap: 9px; padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--bgs); }
+    .task-row:last-child { border-bottom: none; }
+    .task-num { width: 18px; height: 18px; border-radius: 4px; background: var(--rp); color: var(--r); font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .task-name { font-weight: 600; color: var(--t); }
+    .task-desc { font-size: 12px; color: var(--ts); margin-top: 1px; }
+    .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 7px; font-family: var(--f); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .18s; border: none; }
+    .action-btn.pri { background: var(--r); color: #fff; }
+    .action-btn.pri:hover { background: var(--rl); }
+    .action-btn.sec { background: #fff; border: 1.5px solid var(--b); color: var(--tm); }
+    .action-btn.sec:hover { border-color: var(--r); color: var(--r); }
+    .import-note { margin-top: 10px; padding: 10px 13px; background: #FFFBE6; border: 1px solid #F5D87A; border-radius: 8px; font-size: 12px; color: #7A6000; line-height: 1.55; }
+    .toast { position: fixed; bottom: 22px; right: 22px; background: var(--r); color: #fff; padding: 11px 18px; border-radius: 9px; font-size: 14px; font-weight: 600; box-shadow: 0 6px 20px rgba(228,36,33,.3); transform: translateY(60px); opacity: 0; transition: all .3s; z-index: 999; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+  <div class="nav-inner">
+    <a href="https://www.karolinlinden.de" class="nav-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <img src="https://www.karolinlinden.de/Logos/Bildschirmfoto%202026-01-16%20um%2015.57.41.png" alt="Linden Consulting"
+           onerror="this.style.display='none';document.getElementById('logoFb').style.display='block'">
+      <span id="logoFb" style="display:none">Linden Consulting</span>
+    </a>
+    <nav>
+      <a href="https://www.karolinlinden.de/">Home</a>
+      <a href="https://linden-tools.netlify.app">Tools</a>
+      <a href="https://bookings.karolinlinden.de/#/erstgespraech" class="cta">Termin</a>
+    </nav>
+  </div>
+</header>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">Erstgespräch · Linden Consulting</div>
+    <h1>Digitale Abläufe,<br/><em>die wirklich laufen.</em></h1>
+    <div class="hero-badge" id="heroBadge">
+      <span class="lbl">Gespräch mit:</span>&nbsp;–
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://www.karolinlinden.de/Logos/Bildschirmfoto%202026-01-16%20um%2015.57.41.png" alt="Linden Consulting"
+         onerror="this.style.display='none'">
+    <p>Karolin Linden · Frankfurt am Main</p>
+  </div>
+</div>
+<!-- PROGRESS -->
+<div class="prog-bar" id="progBar">
+  <div class="prog-inner" id="progInner">
+    <div class="prog-step"><div class="prog-dot active" id="pd1">1</div><span class="prog-lbl active" id="pl1">Kundendaten</span></div>
+    <div class="prog-line" id="pline1"></div>
+    <div class="prog-step"><div class="prog-dot" id="pd2">2</div><span class="prog-lbl" id="pl2">Ist-Situation</span></div>
+    <div class="prog-line" id="pline2"></div>
+    <div class="prog-step"><div class="prog-dot" id="pd3">3</div><span class="prog-lbl" id="pl3">Scope & Ziele</span></div>
+    <div class="prog-line" id="pline3"></div>
+    <div class="prog-step"><div class="prog-dot" id="pd4">4</div><span class="prog-lbl" id="pl4">Wertsäule & Angebot</span></div>
+    <div class="prog-line" id="pline4"></div>
+    <div class="prog-step"><div class="prog-dot" id="pd5">5</div><span class="prog-lbl" id="pl5">Notizen</span></div>
+  </div>
+</div>
+<div class="wrap">
+<!-- ══ SCHRITT 1: KUNDENDATEN ══════════════════════════════════════════ -->
+<div class="panel active" id="step-1">
+  <div class="card">
+    <h2 class="card-title">Kundendaten</h2>
+    <div class="card-sub">Kontaktinfos und Unternehmenseckdaten</div>
+    <div class="g2">
+      <div class="field"><label>Ansprechpartner *</label><input type="text" id="kName" placeholder="Max Mustermann"></div>
+      <div class="field"><label>Funktion / Rolle</label><input type="text" id="kRolle" placeholder="Geschäftsführer …"></div>
+      <div class="field"><label>E-Mail *</label><input type="email" id="kMail" placeholder="max@firma.de"></div>
+      <div class="field"><label>Telefon</label><input type="tel" id="kTel" placeholder="+49 …"></div>
+    </div>
+    <div class="sec">Unternehmen</div>
+    <div class="g2">
+      <div class="field"><label>Firmenname *</label><input type="text" id="kFirma" placeholder="Muster GmbH"></div>
+      <div class="field"><label>Website</label><input type="text" id="kWeb" placeholder="www.firma.de"></div>
+      <div class="field">
+        <label>Branche * <small>(bestimmt Preismultiplikator)</small></label>
+        <select id="kBranche" onchange="calcAngebot()">
+          <option value="">— bitte wählen —</option>
+          <option value="2.2">Biotech / Life Sciences  ×2,2</option>
+          <option value="2.0">Pharma / Medizin  ×2,0</option>
+          <option value="1.9">Finance / Versicherung  ×1,9</option>
+          <option value="1.7">IT / Software  ×1,7</option>
+          <option value="1.5">Immobilien  ×1,5</option>
+          <option value="1.4">Industrie / Maschinenbau  ×1,4</option>
+          <option value="1.2">Handel / E-Commerce  ×1,2</option>
+          <option value="1.1">Handwerk  ×1,1</option>
+          <option value="1.0">Gastronomie / Hotel  ×1,0</option>
+          <option value="0.85">NGO / Verein  ×0,85</option>
+          <option value="0.9">Fitness / Wellness  ×0,9</option>
+          <option value="1.0">Bildung / Coaching  ×1,0</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Jahresumsatz * <small>(bestimmt Preismultiplikator)</small></label>
+        <select id="kUmsatz" onchange="calcAngebot()">
+          <option value="">— bitte wählen —</option>
+          <option value="0.75">unter 250.000 €  ×0,75</option>
+          <option value="0.95">250.000 – 1 Mio. €  ×0,95</option>
+          <option value="1.2">1 Mio. – 5 Mio. €  ×1,2</option>
+          <option value="1.55">5 Mio. – 20 Mio. €  ×1,55</option>
+          <option value="2.0">20 Mio. – 100 Mio. €  ×2,0</option>
+          <option value="2.6">über 100 Mio. €  ×2,6</option>
+        </select>
+      </div>
+      <div class="field"><label>Mitarbeiterzahl</label>
+        <select id="kMA">
+          <option value="">—</option><option>1–5</option><option>6–10</option>
+          <option>11–25</option><option>26–50</option><option>51–100</option><option>über 100</option>
+        </select>
+      </div>
+      <div class="field"><label>Standort</label><input type="text" id="kOrt" placeholder="Frankfurt am Main"></div>
+    </div>
+    <div class="sec">Gespräch</div>
+    <div class="g2">
+      <div class="field"><label>Datum</label><input type="date" id="kDatum"></div>
+      <div class="field"><label>Kanal</label>
+        <select id="kKanal"><option>Online (Video)</option><option>Telefon</option><option>Vor Ort</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row"><div></div><button class="btn-next" onclick="go(2)">Weiter: Ist-Situation →</button></div>
+</div>
+<!-- ══ SCHRITT 2: IST-SITUATION ════════════════════════════════════════ -->
+<div class="panel" id="step-2">
+  <div class="card">
+    <h2 class="card-title">Aktuelle Situation</h2>
+    <div class="card-sub">Welche Tools laufen – und wo drückt der Schuh?</div>
+    <div class="sec">Aktuelle Tools</div>
+    <div class="chk-grid" id="toolsGrid"></div>
+    <div class="field" style="margin-top:10px"><label>Weitere Tools <small>(optional)</small></label>
+      <input type="text" id="toolsExtra" placeholder="Lexware, DATEV, eigene DB …"></div>
+    <div class="sec">Hauptprobleme</div>
+    <div class="chk-grid" id="problemsGrid"></div>
+    <div class="field" style="margin-top:14px"><label>Was läuft schon gut?</label>
+      <textarea id="gutLaeuft" rows="2" placeholder="Was funktioniert bereits zuverlässig …"></textarea></div>
+    <div class="field"><label>Größte Baustelle in einem Satz</label>
+      <input type="text" id="baustelle" placeholder="„Wir verlieren zu viel Zeit mit manueller Datenpflege.“"></div>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(1)">← Zurück</button><button class="btn-next" onclick="go(3)">Weiter: Scope →</button></div>
+</div>
+<!-- ══ SCHRITT 3: SCOPE & ZIELE ════════════════════════════════════════ -->
+<div class="panel" id="step-3">
+  <div class="card">
+    <h2 class="card-title">Scope & Ziele</h2>
+    <div class="card-sub">Was soll digitalisiert werden – und mit welchen Tools?</div>
+    <div class="sec">Bereiche digitalisieren</div>
+    <div class="chk-grid" id="bereicheGrid"></div>
+    <div class="sec" style="margin-top:18px">Zoho-Module besprochen</div>
+    <div class="pills" id="zohoGrid"></div>
+    <div class="sec" style="margin-top:18px">Rahmendaten</div>
+    <div class="g2">
+      <div class="field"><label>Wunsch-Startdatum</label><input type="date" id="startDate"></div>
+      <div class="field"><label>Zeitrahmen</label>
+        <select id="zeitrahmen"><option>bis 3 Monate</option><option>3–6 Monate</option>
+          <option>6–12 Monate</option><option>12–18 Monate</option><option>über 18 Monate</option></select></div>
+    </div>
+    <div class="field"><label>Entscheider / abweichender Ansprechpartner</label>
+      <input type="text" id="entscheider" placeholder="Name, Funktion, E-Mail …"></div>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(2)">← Zurück</button><button class="btn-next" onclick="go(4)">Weiter: Angebot →</button></div>
+</div>
+<!-- ══ SCHRITT 4: WERTSÄULE & ANGEBOT ═══════════════════════════════════ -->
+<div class="panel" id="step-4">
+  <div class="card">
+    <h2 class="card-title">Wertsäule & Angebot</h2>
+    <div class="card-sub">Branche und Umsatz aus Schritt 1 fließen automatisch in die Kalkulation ein.</div>
+    <!-- Multiplikatoren aus Schritt 1 -->
+    <div class="sec">Multiplikatoren (aus Kundendaten)</div>
+    <div class="wert-row">
+      <div class="mult-card highlight" id="mcBranche">
+        <div><div class="mc-label">Branche</div><div class="mc-val" id="mcBrancheVal">– nicht gewählt –</div></div>
+        <div class="mc-mult" id="mcBrancheMult">–</div>
+      </div>
+      <div class="mult-card highlight" id="mcUmsatz">
+        <div><div class="mc-label">Jahresumsatz</div><div class="mc-val" id="mcUmsatzVal">– nicht gewählt –</div></div>
+        <div class="mc-mult" id="mcUmsatzMult">–</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--ts);margin-bottom:16px">
+      Noch nicht gewählt? Zurück zu Schritt 1 gehen und Branche + Umsatz eintragen.
+    </p>
+    <!-- Stundensatz -->
+    <div class="sec">Projektparameter</div>
+    <div class="g2">
+      <div class="field"><label>Mein Stundensatz (Netto, €)</label>
+        <input type="number" id="anStunde" value="120" min="50" max="1000" step="5" oninput="calcAngebot()"></div>
+      <div class="field"><label>Zahlungsmodell</label>
+        <select id="zahlungsmodell">
+          <option>30 % Anzahlung, Rest nach Abschluss</option>
+          <option>Monatliche Raten</option>
+          <option>Stundenbasis (laufend)</option>
+          <option>50 % bei Start, 50 % bei Abnahme</option>
+          <option>Individuell (siehe Notizen)</option>
+        </select></div>
+    </div>
+    <!-- Phasen-Stunden -->
+    <div class="sec">Stunden pro Phase</div>
+    <div class="field">
+      <label>Phase 1 – Fundament <small>(Analyse, Struktur, erste Einrichtung)</small></label>
+      <div class="slider-val" id="sv1">20 h</div>
+      <input type="range" id="sl1" min="4" max="80" value="20" step="2" oninput="calcAngebot()">
+      <div class="slider-lbls"><span>4 h</span><span>80 h</span></div>
+    </div>
+    <div class="field">
+      <label>Phase 2 – PoC & Rollout <small>(Konfiguration, Tests, Schulungen)</small></label>
+      <div class="slider-val" id="sv2">40 h</div>
+      <input type="range" id="sl2" min="8" max="160" value="40" step="4" oninput="calcAngebot()">
+      <div class="slider-lbls"><span>8 h</span><span>160 h</span></div>
+    </div>
+    <div class="field">
+      <label>Phase 3 – Skalierung <small>(Reporting, Automatisierung, Erweiterung)</small></label>
+      <div class="slider-val" id="sv3">0 h</div>
+      <input type="range" id="sl3" min="0" max="120" value="0" step="4" oninput="calcAngebot()">
+      <div class="slider-lbls"><span>0 h</span><span>120 h</span></div>
+    </div>
+    <!-- PRICE BOX -->
+    <div class="price-box">
+      <div class="price-box-top">Angebotszusammenfassung</div>
+      <div class="price-phases" id="pricePhases"></div>
+      <div class="price-total-row">
+        <span class="price-total-lbl">Gesamtinvestition (Netto)</span>
+        <span class="price-total-val" id="priceTotal">–</span>
+      </div>
+      <div class="price-range" id="priceRange"></div>
+      <div class="price-breakdown" id="priceBreakdown"></div>
+    </div>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(3)">← Zurück</button><button class="btn-next" onclick="go(5)">Weiter: Notizen →</button></div>
+</div>
+<!-- ══ SCHRITT 5: NOTIZEN ═══════════════════════════════════════════════ -->
+<div class="panel" id="step-5">
+  <div class="card">
+    <h2 class="card-title">Gesprächsnotizen</h2>
+    <div class="card-sub">Kern-Erkenntnisse, offene Fragen und nächste Schritte</div>
+    <div class="field"><label>Kernaussage / Schmerzpunkt des Kunden</label>
+      <textarea id="nKern" rows="3" placeholder="Was hat der Kunde als größtes Problem beschrieben?"></textarea></div>
+    <div class="field"><label>Besondere Anforderungen / Rahmenbedingungen</label>
+      <textarea id="nAnforderungen" rows="2" placeholder="DSGVO, bestehende Verträge, interne Vorgaben …"></textarea></div>
+    <div class="field"><label>Offene Fragen / Unklarheiten</label>
+      <textarea id="nFragen" rows="2" placeholder="Was muss noch geklärt werden?"></textarea></div>
+    <div class="sec">Nächste Schritte</div>
+    <div class="chk-grid" id="nextGrid"></div>
+    <div class="field" style="margin-top:12px"><label>Nächster Kontakt</label>
+      <input type="date" id="nNextContact"></div>
+    <div class="field"><label>Sonstige Notizen</label>
+      <textarea id="nSonstige" rows="2" placeholder="Alles weitere …"></textarea></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-back" onclick="go(4)">← Zurück</button>
+    <button class="btn-next" onclick="generate()" style="background:#b31a17">Angebot & Projekt generieren</button>
+  </div>
+</div>
+<!-- ══ ERGEBNIS ═══════════════════════════════════════════════════════ -->
+<div id="step-result">
+  <div style="background:var(--rp);border:1px solid var(--rm);border-radius:var(--rad);padding:18px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
+    <div style="font-size:30px"></div>
+    <div><strong style="font-size:15px">Alles bereit!</strong>
+      <p style="font-size:13px;color:var(--tm);margin-top:2px">Angebots-E-Mail, Zoho-Projektstruktur und Protokoll wurden generiert.</p></div>
+  </div>
+  <div class="res-tabs">
+    <button class="res-tab active" onclick="showTab('email',this)">Angebots-E-Mail</button>
+    <button class="res-tab" onclick="showTab('projekt',this)">Zoho-Projekt</button>
+    <button class="res-tab" onclick="showTab('brief',this)">Protokoll</button>
+  </div>
+  <div class="res-panel active" id="tab-email">
+    <div class="email-box">
+      <div class="email-hd">
+        <p>An: <strong id="emTo">–</strong></p>
+        <p>Betreff: <strong id="emSubject">–</strong></p>
+      </div>
+      <div class="email-body" id="emBody"></div>
+      <div class="email-foot">
+        <button class="action-btn pri" onclick="cp('emBody')">Kopieren</button>
+        <a class="action-btn sec" id="emMailto">Im Mailprogramm öffnen</a>
+        <div class="email-hint">Hinweis: Manche Mailprogramme (z. B. Outlook) kürzen lange mailto-Links. Bei längeren Angeboten lieber „Kopieren“ nutzen.</div>
+      </div>
+    </div>
+  </div>
+  <div class="res-panel" id="tab-projekt">
+    <!-- Zoho Direct Create (Claude Desktop App only) -->
+    <div id="zohoAutoBox" style="background:var(--rp);border:1.5px solid var(--rm);border-radius:var(--rad);padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--r);margin-bottom:3px">Direkt in Zoho Projects anlegen</div>
+        <div style="font-size:12px;color:var(--tm)" id="zohoAutoDesc">Projekt, Tasklisten und Aufgaben werden automatisch angelegt.</div>
+      </div>
+      <button class="action-btn pri" onclick="sendToZoho()" id="zohoAutoBtn" style="flex-shrink:0">Jetzt anlegen</button>
+    </div>
+    <div class="proj-box" id="projBox"></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="action-btn sec" onclick="dlCSV()">⬇️ CSV herunterladen</button>
+      <a class="action-btn sec" href="https://projects.zoho.eu" target="_blank">Zoho Projects öffnen</a>
+    </div>
+    <div class="import-note" id="importNote"><strong>CSV-Import:</strong> Zoho Projects → Neues Projekt → Aufgaben → ⋮ → Importieren → CSV hochladen. Datumsformat im CSV: JJJJ-MM-TT (ISO), beim Import ggf. Format-Mapping prüfen.</div>
+  </div>
+  <div class="res-panel" id="tab-brief">
+    <div class="email-box">
+      <div class="email-hd"><strong>Gesprächsprotokoll</strong></div>
+      <div class="email-body" id="briefBody"></div>
+      <div class="email-foot">
+        <button class="action-btn pri" onclick="cp('briefBody')">Kopieren</button>
+        <button class="action-btn sec" onclick="dlTxt()">⬇️ Als TXT speichern</button>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:18px;text-align:center">
+    <button class="action-btn sec" onclick="location.reload()">↩ Neues Gespräch</button>
+  </div>
+</div>
+</div><!-- /wrap -->
+<div class="toast" id="toast"></div>
+<script>
+// ═══════════════════════════════════════ DATA ════════════════════════════
+const TOOLS = [
+  'Microsoft Excel','Microsoft Word','Microsoft Outlook','Microsoft Teams',
+  'Google Workspace','Lexware','DATEV','SAP','Personio',
+  'Trello / Asana','Slack','WhatsApp (geschäftlich)','Papier / Ordner',
+  'Eigene Datenbank / Access','Kein CRM vorhanden'
+];
+const PROBLEMS = [
+  'Doppelarbeit & manuelle Datenpflege','Fehlende Transparenz',
+  'Zu viele unterschiedliche Tools','Keine klare Dokumentenstruktur',
+  'Langsame Team-Kommunikation','Fehlerhafte oder verzögerte Rechnungen',
+  'Keine Automatisierungen','Fehlende Kennzahlen / Reporting',
+  'DSGVO-Unsicherheiten','Tools werden nicht konsequent genutzt',
+  'Hohe Softwarekosten ohne Nutzen','Schwieriges Onboarding'
+];
+const BEREICHE = [
+  'Vertrieb & CRM','Dokumentenmanagement',
+  'Projektmanagement','Produktion / Abläufe',
+  'Buchhaltung & Finanzen','HR & Personal',
+  'Reporting & Dashboards','Einkauf & Lager',
+  'Forschung & Entwicklung','Marketing',
+  'Schulungen & Wissen','Website & Online'
+];
+const ZOHO = [
+  {e:'',n:'Zoho CRM'},{e:'',n:'Zoho WorkDrive'},{e:'',n:'Zoho Projects'},
+  {e:'',n:'Zoho Analytics'},{e:'',n:'Zoho Books'},{e:'',n:'Zoho Inventory'},
+  {e:'',n:'Zoho People'},{e:'',n:'Zoho Creator'},{e:'',n:'Zoho Mail'},
+  {e:'',n:'Zoho Campaigns'},{e:'',n:'Zoho Cliq'},{e:'',n:'Zoho Flow'},
+  {e:'',n:'Zoho Sign'},{e:'',n:'Zoho One'}
+];
+const NEXTSTEPS = [
+  'Angebot per E-Mail zusenden','Detailliertes Konzept ausarbeiten',
+  'Demo / Präsentation vereinbaren','Kostenvergleich erstellen',
+  'Referenzprojekt vorstellen','ROI-Kalkulation erstellen',
+  'Vertrag vorbereiten','Kickoff-Termin festlegen'
+];
+const PHASE_TASKS = {
+  p1:[
+    {n:'Ist-Analyse & Ordnerstruktur',d:'Analyse bestehender Strukturen, Ablage und Workflows'},
+    {n:'Berechtigungskonzept erstellen',d:'Rollen, Zugriffsrechte, E-Mail-Richtlinien definieren'},
+    {n:'Rollen & Funktionen definieren',d:'Verantwortlichkeiten und Zeiterfassung klären'},
+    {n:'Wissensdokumentation starten',d:'Internes Wissen sichern – WorkDrive als Wissensdatenbank'},
+    {n:'Zoho One einrichten (2 Lizenzen)',d:'Start mit Admin- und GF-Lizenz, Grundkonfiguration'},
+    {n:'PoC erstes Zoho-Modul',d:'Proof of Concept für das priorisierte Hauptmodul'},
+  ],
+  p2:[
+    {n:'PoC auswerten & anpassen',d:'Erkenntnisse einfließen lassen, Konfiguration finalisieren'},
+    {n:'Rollout Haupt-Modul',d:'Unternehmensweit ausrollen inkl. Datenmigration'},
+    {n:'Weitere Module konfigurieren',d:'CRM, DMS, PM-Board, Buchhaltung je nach Scope'},
+    {n:'Schulungen Mitarbeitende',d:'Praxisnahe Schulungen zu allen relevanten Modulen'},
+    {n:'Superuser schulen',d:'Eigenständige Pflege, Admin-Rechte, Design-Anpassungen'},
+    {n:'Prozesse dokumentieren',d:'SOPs im WorkDrive ablegen'},
+  ],
+  p3:[
+    {n:'Reporting & Dashboards',d:'Zoho Analytics – KPIs und Managementreports'},
+    {n:'Automatisierungen aufbauen',d:'Zoho Flow – wiederkehrende Abläufe automatisieren'},
+    {n:'Weitere Skalierungsmodule',d:'Inventory, Creator, People – je nach Scope'},
+    {n:'Onboarding-Prozess digitalisieren',d:'Strukturiertes digitales Onboarding entwickeln'},
+    {n:'Abschluss & Feintuning',d:'Rücksprache mit allen Beteiligten, letzte Anpassungen'},
+  ]
+};
+// ═══════════════════════════════════════ RENDER ══════════════════════════
+function mkChecks(containerId, items, prefix){
+  const el = document.getElementById(containerId);
+  items.forEach((item,i)=>{
+    const lbl = document.createElement('label');
+    lbl.className='chk-item'; lbl.htmlFor=`${prefix}_${i}`;
+    lbl.innerHTML=`<input type="checkbox" id="${prefix}_${i}" value="${item}">
+      <div class="chk-box"></div><span class="chk-lbl">${item}</span>`;
+    lbl.querySelector('input').addEventListener('change',function(){
+      lbl.classList.toggle('sel',this.checked);
+    });
+    el.appendChild(lbl);
+  });
+}
+function mkZoho(){
+  const el=document.getElementById('zohoGrid');
+  ZOHO.forEach((m,i)=>{
+    const lbl=document.createElement('label');
+    lbl.className='pill'; lbl.innerHTML=`<input type="checkbox" id="zm_${i}" value="${m.n}"><span>${m.e}</span><span>${m.n}</span>`;
+    lbl.querySelector('input').addEventListener('change',function(){lbl.classList.toggle('sel',this.checked);});
+    el.appendChild(lbl);
+  });
+}
+// ═══════════════════════════════════════ NAVIGATION ══════════════════════
+function go(n){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById(`step-${n}`);
+  if(p) p.classList.add('active');
+  for(let i=1;i<=5;i++){
+    document.getElementById(`pd${i}`).className='prog-dot'+(i===n?' active':i<n?' done':'');
+    document.getElementById(`pl${i}`).className='prog-lbl'+(i===n?' active':'');
+    if(i<5) document.getElementById(`pline${i}`).className='prog-line'+(i<n?' done':'');
+  }
+  // Update multiplier display when entering step 4
+  if(n===4) updateMultDisplay();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// ═══════════════════════════════════════ WERTSÄULE + KALKULATION ═════════
+const BRANCHE_NAMES = {
+  '2.2':'Biotech / Life Sciences','2.0':'Pharma / Medizin','1.9':'Finance / Versicherung',
+  '1.7':'IT / Software','1.5':'Immobilien','1.4':'Industrie / Maschinenbau',
+  '1.2':'Handel / E-Commerce','1.1':'Handwerk','1.0':'Gastronomie / Hotel / Bildung',
+  '0.85':'NGO / Verein','0.9':'Fitness / Wellness'
+};
+const UMSATZ_NAMES = {
+  '0.75':'unter 250.000 €','0.95':'250.000 – 1 Mio. €','1.2':'1 – 5 Mio. €',
+  '1.55':'5 – 20 Mio. €','2.0':'20 – 100 Mio. €','2.6':'über 100 Mio. €'
+};
+function updateMultDisplay(){
+  const bv = document.getElementById('kBranche').value;
+  const uv = document.getElementById('kUmsatz').value;
+  document.getElementById('mcBrancheVal').textContent = bv ? BRANCHE_NAMES[bv]||'–' : '← aus Schritt 1 wählen';
+  document.getElementById('mcBrancheMult').textContent = bv ? '×'+bv : '–';
+  document.getElementById('mcUmsatzVal').textContent   = uv ? UMSATZ_NAMES[uv]||'–' : '← aus Schritt 1 wählen';
+  document.getElementById('mcUmsatzMult').textContent  = uv ? '×'+uv : '–';
+}
+function calcAngebot(){
+  updateMultDisplay();
+  const rate = +document.getElementById('anStunde').value || 120;
+  const bm   = +(document.getElementById('kBranche').value) || 1;
+  const um   = +(document.getElementById('kUmsatz').value)  || 1;
+  const h1   = +document.getElementById('sl1').value;
+  const h2   = +document.getElementById('sl2').value;
+  const h3   = +document.getElementById('sl3').value;
+  document.getElementById('sv1').textContent = h1+' h';
+  document.getElementById('sv2').textContent = h2+' h';
+  document.getElementById('sv3').textContent = h3+' h';
+  const mult = bm * um;
+  const p1 = h1*rate*mult, p2 = h2*rate*mult, p3 = h3*rate*mult;
+  const total = p1+p2+p3;
+  const phases = [['Phase 1',h1,p1],['Phase 2',h2,p2],['Phase 3',h3,p3]].filter(x=>x[1]>0);
+  document.getElementById('pricePhases').innerHTML = phases.map(([n,h,p])=>`
+    <div class="phase-chip">
+      <div class="pc-name">${n}</div>
+      <div class="pc-h">${h} h</div>
+      <div class="pc-price">${fmt(p)}</div>
+    </div>`).join('');
+  if(total>0){
+    document.getElementById('priceTotal').textContent = fmt(total);
+    document.getElementById('priceRange').textContent = `Spanne: ${fmt(total*.85)} – ${fmt(total*1.2)}`;
+    document.getElementById('priceBreakdown').innerHTML = `
+      <div class="bd-row"><span>Basispreis (${h1+h2+h3} h × ${rate} €)</span><span class="bd-val">${fmt((h1+h2+h3)*rate)}</span></div>
+      <div class="bd-row"><span>Branchenfaktor</span><span class="bd-val">×${bm.toFixed(2)}</span></div>
+      <div class="bd-row"><span>Umsatzfaktor</span><span class="bd-val">×${um.toFixed(2)}</span></div>
+      <div class="bd-row"><span>Gesamtinvestition (Netto)</span><span class="bd-val" style="color:var(--r)">${fmt(total)}</span></div>`;
+  } else {
+    document.getElementById('priceTotal').textContent='–';
+    document.getElementById('priceRange').textContent='';
+    document.getElementById('priceBreakdown').innerHTML='';
+  }
+}
+// ═══════════════════════════════════════ VALIDIERUNG ═════════════════════
+function validateRequired(){
+  const required = [
+    ['kName','Ansprechpartner'],
+    ['kMail','E-Mail'],
+    ['kFirma','Firmenname'],
+    ['kBranche','Branche'],
+    ['kUmsatz','Jahresumsatz'],
+  ];
+  document.querySelectorAll('.invalid').forEach(el=>el.classList.remove('invalid'));
+  const missing = [];
+  required.forEach(([id,label])=>{
+    const el = document.getElementById(id);
+    if(!el.value.trim()){ missing.push(label); el.classList.add('invalid'); }
+  });
+  return missing;
+}
+// ═══════════════════════════════════════ GENERATE ════════════════════════
+function generate(){
+  const missing = validateRequired();
+  if(missing.length){
+    toast('Bitte zuerst ausfüllen: '+missing.join(', '));
+    go(1);
+    return;
+  }
+  const bSel = document.getElementById('kBranche');
+  const uSel = document.getElementById('kUmsatz');
+  const bm = +(bSel.value)||1, um = +(uSel.value)||1;
+  const rate = +document.getElementById('anStunde').value||120;
+  const h1=+document.getElementById('sl1').value, h2=+document.getElementById('sl2').value, h3=+document.getElementById('sl3').value;
+  const mult=bm*um;
+  const p1=h1*rate*mult, p2=h2*rate*mult, p3=h3*rate*mult, total=p1+p2+p3;
+  const d={
+    name:v('kName'),rolle:v('kRolle'),mail:v('kMail'),tel:v('kTel'),
+    firma:v('kFirma'),web:v('kWeb'),ort:v('kOrt'),
+    branche: bSel.value ? (bSel.options[bSel.selectedIndex]?.text?.split('  ')[0]||'–') : '–',
+    umsatz:  uSel.value ? (uSel.options[uSel.selectedIndex]?.text?.split('  ')[0]||'–') : '–',
+    ma:v('kMA'),datum:v('kDatum'),kanal:v('kKanal'),
+    tools:   checked('tools',TOOLS), toolsExtra:v('toolsExtra'),
+    problems:checked('problems',PROBLEMS),
+    gutLaeuft:v('gutLaeuft'),baustelle:v('baustelle'),
+    bereiche:checked('bereiche',BEREICHE),
+    zohoMods:ZOHO.filter((_,i)=>document.getElementById(`zm_${i}`)?.checked).map(m=>m.n),
+    startDate:v('startDate'),zeitrahmen:v('zeitrahmen'),entscheider:v('entscheider'),
+    zahlungsmodell:v('zahlungsmodell'),
+    bm,um,rate,h1,h2,h3,p1,p2,p3,total,
+    kern:v('nKern'),anforderungen:v('nAnforderungen'),fragen:v('nFragen'),
+    sonstige:v('nSonstige'),nextContact:v('nNextContact'),
+    nextSteps:checked('next',NEXTSTEPS),
+  };
+  buildEmail(d); buildProject(d); buildBrief(d);
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('progBar').style.display='none';
+  document.getElementById('step-result').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildEmail(d){
+  const phases=[];
+  if(d.h1>0) phases.push(`Phase 1 – Fundament      ${d.h1} h | ${fmt(d.p1)}`);
+  if(d.h2>0) phases.push(`Phase 2 – PoC & Rollout  ${d.h2} h | ${fmt(d.p2)}`);
+  if(d.h3>0) phases.push(`Phase 3 – Skalierung     ${d.h3} h | ${fmt(d.p3)}`);
+  const subj=`Dein individuelles Angebot – Linden Consulting × ${d.firma}`;
+  const body=`Hallo ${d.name.split(' ')[0]||d.name},
+vielen Dank für unser Gespräch${d.datum?' am '+deDate(d.datum):''} – es hat mir viel Klarheit gegeben.
+Wie versprochen, hier mein individuelles Angebot für ${d.firma}.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANGEBOT – DIGITALE GESCHÄFTSABLÄUFE
+${d.firma}${d.branche!='–'?' | Branche: '+d.branche:''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUSGANGSSITUATION
+${d.baustelle||d.kern||'Auf Basis unseres Gesprächs.'}
+LEISTUNGSUMFANG
+${d.bereiche.length?d.bereiche.map(b=>'• '+b).join('\n'):'• Digitalisierung deiner Geschäftsabläufe'}
+EMPFOHLENE ZOHO-MODULE
+${d.zohoMods.length?d.zohoMods.join(', '):'gemäß Gespräch'}
+PROJEKTZEITPLAN & INVESTMENT
+${phases.join('\n')}
+  ────────────────────────────────────────
+  Gesamtinvestition (Netto):  ${fmt(d.total)}
+  Orientierungsspanne:        ${fmt(d.total*.85)} – ${fmt(d.total*1.2)}
+WUNSCHSTART
+${d.startDate?deDate(d.startDate):'nach Vereinbarung'} | Laufzeit: ${d.zeitrahmen||'6–12 Monate'}
+ZAHLUNGSMODELL
+${d.zahlungsmodell}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NÄCHSTE SCHRITTE
+${d.nextSteps.length?d.nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n'):'1. Angebot prüfen\n2. Rückfragen klären\n3. Kickoff-Termin vereinbaren'}
+${d.nextContact?'\nIch melde mich spätestens am '+deDate(d.nextContact)+'.':''}
+Bei Fragen bin ich jederzeit erreichbar.
+Herzliche Grüße
+Karolin Linden
+──────────────────────────────────────────
+Linden Consulting | Karolin Linden
++49 (0) 6974737901
+info@karolinlinden.de
+www.karolinlinden.de
+──────────────────────────────────────────`;
+  document.getElementById('emTo').textContent=`${d.name} <${d.mail}>`;
+  document.getElementById('emSubject').textContent=subj;
+  document.getElementById('emBody').textContent=body;
+  document.getElementById('emMailto').href=`mailto:${d.mail}?subject=${enc(subj)}&body=${enc(body)}&cc=info@karolinlinden.de`;
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function buildProject(d){
+  const phases=[
+    {key:'p1',title:'Phase 1 – Fundament',show:d.h1>0},
+    {key:'p2',title:'Phase 2 – PoC & Rollout',show:d.h2>0},
+    {key:'p3',title:'Phase 3 – Skalierung',show:d.h3>0},
+  ].filter(p=>p.show);
+  const el=document.getElementById('projBox');
+  el.innerHTML=`
+    <div class="proj-hd">
+      <h3>${escapeHtml(d.firma)} – Zoho-Digitalisierung</h3>
+      <p>${d.branche!='–'?escapeHtml(d.branche)+' | ':''}${d.ma?escapeHtml(d.ma)+' MA | ':''}Start: ${d.startDate?deDate(d.startDate):'nach Vereinbarung'}</p>
+    </div>
+    ${phases.map(ph=>`
+      <div class="phase-block">
+        <div class="phase-title">${ph.title}</div>
+        ${PHASE_TASKS[ph.key].map((t,i)=>`
+          <div class="task-row">
+            <div class="task-num">${i+1}</div>
+            <div><div class="task-name">${t.n}</div><div class="task-desc">${t.d}</div></div>
+          </div>`).join('')}
+      </div>`).join('')}`;
+  window._projData={d,phases};
+}
+function buildBrief(d){
+  const txt=`GESPRÄCHSPROTOKOLL – ERSTGESPRÄCH
+Linden Consulting × ${d.firma}
+Datum: ${d.datum?deDate(d.datum):new Date().toLocaleDateString('de-DE')} | ${d.kanal}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KONTAKT
+  Name:          ${d.name}${d.rolle?' ('+d.rolle+')':''}
+  E-Mail:        ${d.mail}
+  Telefon:       ${d.tel||'–'}
+  Firma:         ${d.firma}${d.web?' | '+d.web:''}
+  Branche:       ${d.branche}
+  Jahresumsatz:  ${d.umsatz}
+  Mitarbeitende: ${d.ma||'–'}
+  Standort:      ${d.ort||'–'}
+WERTSÄULE
+  Branchenfaktor:  ×${d.bm.toFixed(2)}
+  Umsatzfaktor:    ×${d.um.toFixed(2)}
+  Gesamtfaktor:    ×${(d.bm*d.um).toFixed(2)}
+IST-SITUATION
+  Tools:     ${d.tools.join(', ')||'–'}${d.toolsExtra?' + '+d.toolsExtra:''}
+  Probleme:  ${d.problems.join(' | ')||'–'}
+  Gut:       ${d.gutLaeuft||'–'}
+  Baustelle: ${d.baustelle||'–'}
+SCOPE
+  Bereiche:  ${d.bereiche.join(', ')||'–'}
+  Module:    ${d.zohoMods.join(', ')||'–'}
+  Start:     ${d.startDate?deDate(d.startDate):'offen'} | ${d.zeitrahmen}
+ANGEBOT
+  Phase 1:   ${d.h1} h | ${fmt(d.p1)}
+  Phase 2:   ${d.h2} h | ${fmt(d.p2)}
+  Phase 3:   ${d.h3} h | ${fmt(d.p3)}
+  Gesamt:    ${fmt(d.total)} (Netto)
+  Zahlung:   ${d.zahlungsmodell}
+NOTIZEN
+  Kern:          ${d.kern||'–'}
+  Anforderungen: ${d.anforderungen||'–'}
+  Fragen:        ${d.fragen||'–'}
+  Nächste Schr.: ${d.nextSteps.join(' | ')||'–'}
+  Nächster Kont: ${d.nextContact?deDate(d.nextContact):'–'}
+  Sonstiges:     ${d.sonstige||'–'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Erstellt: ${new Date().toLocaleString('de-DE')} · Linden Consulting`;
+  document.getElementById('briefBody').textContent=txt;
+}
+function dlCSV(){
+  if(!window._projData) return;
+  const {d,phases}=window._projData;
+  const start=d.startDate?new Date(d.startDate):new Date();
+  const off={p1:0,p2:90,p3:180};
+  const names={p1:'Phase 1 – Fundament',p2:'Phase 2 – PoC & Rollout',p3:'Phase 3 – Skalierung'};
+  let rows=[['AUFGABE-NAME','AUFGABE-BESCHREIBUNG','AUFGABENLISTENNAME','BESITZER','STARTDATUM','FÄLLIGKEITSDATUM','PRIORITÄT','Spezifischer Status']];
+  phases.forEach(ph=>{
+    PHASE_TASKS[ph.key].forEach((t,i)=>{
+      const s=new Date(start); s.setDate(s.getDate()+off[ph.key]+i*5);
+      const e=new Date(s); e.setDate(e.getDate()+4);
+      rows.push([t.n,t.d,names[ph.key],'Karolin Linden',fmtD(s),fmtD(e),i===0?'Hoch':'Normal','Offen']);
+    });
+  });
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=`Zoho_${d.firma.replace(/\s+/g,'_')}.csv`; a.click();
+  toast('CSV heruntergeladen ✓');
+}
+function sendToZoho(){
+  if(!window._projData){ toast('Bitte zuerst generieren.'); return; }
+  const {d,phases}=window._projData;
+  const names={p1:'Phase 1 – Fundament',p2:'Phase 2 – PoC & Rollout',p3:'Phase 3 – Skalierung'};
+  const phaseTxt=phases.map(ph=>`${names[ph.key]}: ${PHASE_TASKS[ph.key].map(t=>t.n).join(', ')}`).join('\n');
+  const msg=`Bitte lege jetzt in Zoho Projects (Portal-ID 20107761440) ein neues Projekt an mit diesen Daten:
+Projektname: ${d.firma} – Digitale Geschäftsabläufe
+Beschreibung: ${d.branche!='–'?'Branche: '+d.branche+' | ':''
+}Jahresumsatz: ${d.umsatz} | ${d.ma?d.ma+' Mitarbeitende | ':''}Kontakt: ${d.name}
+Startdatum: ${d.startDate||new Date().toISOString().split('T')[0]}
+Enddatum: ${d.startDate?(()=>{const e=new Date(d.startDate);e.setMonth(e.getMonth()+6);return e.toISOString().split('T')[0]})():''}
+Besitzerin ZPUID: 305684000000047003
+Lege folgende Tasklisten und Aufgaben an:
+${phaseTxt}
+Gesamtinvestition: ${fmt(d.total)} (Netto)`;
+  if(typeof window.sendPrompt==='function'){
+    window.sendPrompt(msg);
+  } else {
+    navigator.clipboard.writeText(msg).then(()=>{
+      toast('Text kopiert – bitte in Claude einfügen');
+      document.getElementById('zohoAutoDesc').textContent='Text wurde kopiert → in Claude Desktop einfügen, dann legt Claude das Projekt automatisch an.';
+      document.getElementById('importNote').innerHTML='<strong>Hinweis:</strong> Öffne <a href="https://claude.ai" target="_blank" style="color:var(--r)">Claude</a> und füge den kopierten Text ein – oder nutze den CSV-Import direkt.';
+    });
+  }
+}
+function dlTxt(){
+  const txt=document.getElementById('briefBody').textContent;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+  a.download='Erstgespraech-Protokoll.txt'; a.click();
+  toast('Protokoll gespeichert ✓');
+}
+// ═══════════════════════════════════════ UTILS ════════════════════════════
+function v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function checked(prefix,items){return items.filter((_,i)=>document.getElementById(`${prefix}_${i}`)?.checked);}
+function fmt(n){return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);}
+function fmtD(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function deDate(iso){const[y,m,d]=iso.split('-');return`${d}.${m}.${y}`;}
+function enc(s){return encodeURIComponent(s);}
+function cp(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>toast('Kopiert ✓'));}
+function showTab(name,btn){
+  document.querySelectorAll('.res-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.res-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  btn.classList.add('active');
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+// ═══════════════════════════════════════ INIT ═════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('kDatum').value=new Date().toISOString().split('T')[0];
+  mkChecks('toolsGrid',TOOLS,'tools');
+  mkChecks('problemsGrid',PROBLEMS,'problems');
+  mkChecks('bereicheGrid',BEREICHE,'bereiche');
+  mkZoho();
+  mkChecks('nextGrid',NEXTSTEPS,'next');
+  // Live-Badge Firmenname
+  document.getElementById('kFirma').addEventListener('input',function(){
+    const badge=document.getElementById('heroBadge');
+    badge.innerHTML=this.value.trim()
+      ?`<span class="lbl">Gespräch mit:</span>&nbsp;<strong>${escapeHtml(this.value.trim())}</strong>`
+      :`<span class="lbl">Gespräch mit:</span>&nbsp;–`;
+  });
+});
+</script>
+</body>
+</html>
