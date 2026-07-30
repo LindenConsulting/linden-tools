@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Software-Kostenkalkulator – Linden Consulting</title>
-<meta name="description" content="Berechne deine aktuellen Software-Kosten und entdecke Einsparpotenziale mit dem Kalkulator von Linden Consulting.">
+<meta name="description" content="Berechne deine aktuellen Software-Kosten, sieh dein Einsparpotenzial und erhalte eine passende Zoho- oder Wildix-Empfehlung von Linden Consulting.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -17,7 +17,9 @@ header{background:var(--schwarz);color:var(--weiss);padding:16px 32px;display:fl
 .container{max-width:900px;margin:0 auto;padding:32px 24px}
 h1{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
 h1 span{color:var(--rot)}
-.subtitle{color:var(--gedaempft);font-size:15px;margin-bottom:32px}
+.subtitle{color:var(--gedaempft);font-size:15px;margin-bottom:20px}
+.audience-note{background:#fff8f8;border:1px solid var(--grau2);border-left:4px solid var(--rot);border-radius:8px;padding:14px 18px;font-size:13px;line-height:1.6;color:var(--text);margin-bottom:24px}
+.audience-note strong{color:var(--rot)}
 .summary-bar{background:var(--weiss);border-radius:var(--radius);padding:20px 24px;display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px;border:1px solid var(--grau2);position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .sum-item{display:flex;flex-direction:column;gap:2px}
 .sum-label{font-size:11px;color:var(--gedaempft);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
@@ -37,14 +39,27 @@ h1 span{color:var(--rot)}
 .tool-name.checked{font-weight:500}
 .price-field{width:90px;padding:6px 10px;border:1px solid var(--grau2);border-radius:6px;font-size:13px;font-family:inherit;text-align:right}
 .users-field{width:70px;padding:6px 10px;border:1px solid var(--grau2);border-radius:6px;font-size:13px;font-family:inherit;text-align:right}
+.custom-name-field{flex:1;min-width:140px;padding:6px 10px;border:1px solid var(--grau2);border-radius:6px;font-size:13px;font-family:inherit}
 .field-label{font-size:11px;color:var(--gedaempft);white-space:nowrap}
 .tool-subtotal{font-size:13px;font-weight:600;width:80px;text-align:right;color:var(--rot)}
+.remove-btn{background:none;border:none;color:var(--gedaempft);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0}
+.remove-btn:hover{color:var(--rot)}
+.add-tool-btn{background:none;border:1px dashed var(--rot);color:var(--rot);font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
+.add-tool-btn:hover{background:#fff2f2}
 .savings-box{background:linear-gradient(135deg,#fff8f8,#fff);border:2px solid var(--rot);border-radius:var(--radius);padding:24px;margin:28px 0}
 .savings-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--rot)}
 .savings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
 .savings-item{background:var(--weiss);border-radius:8px;padding:16px;border:1px solid var(--grau2)}
 .savings-item .val{font-size:24px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
 .savings-item .lbl{font-size:12px;color:var(--gedaempft)}
+.recommend-box{background:var(--weiss);border:1px solid var(--grau2);border-radius:var(--radius);padding:24px;margin-bottom:28px}
+.recommend-title{font-size:18px;font-weight:700;margin-bottom:16px}
+.recommend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:14px}
+.recommend-item{background:var(--grau);border-radius:8px;padding:16px;border-left:4px solid var(--rot)}
+.recommend-item h4{font-size:12px;color:var(--gedaempft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.recommend-item .tool{font-size:16px;font-weight:700;margin-bottom:6px}
+.recommend-item p{font-size:12px;color:var(--gedaempft);line-height:1.5}
+.recommend-note{font-size:12px;color:var(--gedaempft);background:var(--grau);padding:12px 14px;border-radius:8px;line-height:1.6}
 .foerder-box{background:var(--weiss);border:1px solid var(--grau2);border-radius:var(--radius);padding:24px;margin-bottom:28px}
 .foerder-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .foerder-badge{background:var(--rot);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase}
@@ -53,13 +68,22 @@ h1 span{color:var(--rot)}
 .foerder-item h4{font-size:13px;font-weight:600;margin-bottom:8px}
 .foerder-item p{font-size:12px;color:var(--gedaempft);line-height:1.5}
 .foerder-item .highlight{font-size:18px;font-weight:700;color:var(--rot);margin-bottom:4px}
+.warum-box{background:var(--weiss);border:1px solid var(--grau2);border-radius:var(--radius);padding:24px;margin-bottom:28px}
+.warum-title{font-size:18px;font-weight:700;margin-bottom:14px}
+.warum-box p{font-size:14px;line-height:1.7;color:var(--text);margin-bottom:12px}
+.warum-box p:last-of-type{margin-bottom:0}
+.warum-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:16px}
+.warum-pillar{background:var(--grau);border-radius:8px;padding:14px;font-size:13px;line-height:1.5}
+.warum-pillar strong{display:block;margin-bottom:4px;color:var(--rot)}
 .cta-box{background:var(--schwarz);color:var(--weiss);border-radius:var(--radius);padding:28px;text-align:center;margin-bottom:40px}
 .cta-box h3{font-size:20px;font-weight:700;margin-bottom:8px}
 .cta-box p{color:#aaa;font-size:14px;margin-bottom:20px;line-height:1.6}
 .cta-btn{display:inline-block;background:var(--rot);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s}
 .cta-btn:hover{background:#b81c19}
+.cta-btn-secondary{background:transparent;border:2px solid var(--rot);color:var(--rot);margin-left:12px;padding:10px 26px}
+.cta-btn-secondary:hover{background:var(--rot);color:#fff}
 .chevron{transition:transform .2s;font-size:12px;display:inline-block}
-@media(max-width:600px){.summary-bar{gap:16px}.foerder-grid{grid-template-columns:1fr}.tool-row{gap:8px}}
+@media(max-width:600px){.summary-bar{gap:16px}.foerder-grid{grid-template-columns:1fr}.tool-row{gap:8px}.cta-btn-secondary{margin-left:0;margin-top:12px;display:block}}
 </style>
 </head>
 <body>
@@ -69,7 +93,12 @@ h1 span{color:var(--rot)}
 </header>
 <div class="container">
   <h1>Was kosten deine <span>Tools</span> wirklich?</h1>
-  <p class="subtitle">Aktiviere deine aktuellen Software-Tools, passe Preise und Nutzerzahl an – und sieh sofort dein Einsparpotenzial.</p>
+  <p class="subtitle">Aktiviere deine aktuellen Software-Tools, passe Preise und Nutzerzahl an – und sieh sofort dein Einsparpotenzial sowie eine auf deinen Bereich abgestimmte Zoho- oder Wildix-Empfehlung.</p>
+
+  <div class="audience-note">
+    <strong>Neu bei Linden Consulting?</strong> Verschaff dir in wenigen Minuten einen Überblick über deine aktuellen Tool-Kosten und dein Einsparpotenzial – als Basis für ein Erstgespräch.<br>
+    <strong>Schon Kundin oder Kunde?</strong> Nutze den Rechner z.&nbsp;B. einmal im Jahr als Stack-Check: neue Förderungen, neue Zoho-Bausteine oder gestiegene Preise deiner bisherigen Tools legen oft zusätzliches Sparpotenzial frei.
+  </div>
 
   <div class="summary-bar" id="summaryBar">
     <div class="sum-item"><div class="sum-label">Monatliche Kosten</div><div class="sum-val red" id="sumMonat">0 €</div></div>
@@ -90,6 +119,12 @@ h1 span{color:var(--rot)}
     </div>
   </div>
 
+  <div class="recommend-box" id="recommendBox" style="display:none">
+    <div class="recommend-title">🎯 Deine Tool-Empfehlung</div>
+    <div class="recommend-grid" id="recommendGrid"></div>
+    <div class="recommend-note" id="recommendNote" style="display:none"></div>
+  </div>
+
   <div class="foerder-box">
     <div class="foerder-title">Förderprogramme <span class="foerder-badge">Hessen</span></div>
     <div class="foerder-grid">
@@ -106,10 +141,22 @@ h1 span{color:var(--rot)}
     </div>
   </div>
 
+  <div class="warum-box">
+    <div class="warum-title">Warum mit Linden Consulting zusammenarbeiten?</div>
+    <p>Ich habe Linden Consulting gegründet, weil ich immer wieder gesehen habe, wie viel Zeit KMU durch Excel-Chaos, doppelte Dateneingabe und fehlende CRM-Systeme verlieren – Anfragen gehen unter, Rechnungen entstehen manuell, niemand hat den vollen Überblick. Das kostet nicht nur Zeit, sondern auch Aufträge.</p>
+    <p>Mit einem frischen Blick von außen helfe ich dir, das passende Tool einzuführen und wiederkehrende Aufgaben wie Rechnungs- oder Angebotserstellung zu automatisieren – praxisnah und ohne Fachchinesisch. Anders als viele Beratungen höre ich nicht bei der Empfehlung auf: Ich begleite die Einführung, bis dein Team die neuen digitalen Geschäftsabläufe wirklich nutzt.</p>
+    <div class="warum-pillars">
+      <div class="warum-pillar"><strong>Blick von außen</strong>Klare Empfehlungen statt Bauchgefühl, abgestimmt auf dein Unternehmen und deine Branche.</div>
+      <div class="warum-pillar"><strong>Begleitung statt Empfehlung allein</strong>Ich bleibe dabei, bis dein Team die neuen Tools im Alltag wirklich nutzt.</div>
+      <div class="warum-pillar"><strong>Förderfähig</strong>Z.&nbsp;B. über INQA-Coaching mit 80 % Förderung – auch für kleine Teams finanziell zugänglich.</div>
+    </div>
+  </div>
+
   <div class="cta-box">
     <h3>Bereit für den nächsten Schritt?</h3>
-    <p>Lass uns gemeinsam analysieren, welche Tools sich wirklich lohnen – und wie Zoho deine digitalen Geschäftsabläufe vereinfacht.</p>
+    <p>Neu hier? Lass uns unverbindlich schauen, wo Zoho oder Wildix deine digitalen Geschäftsabläufe vereinfachen.<br>Schon Kundin oder Kunde? Nutze den Rechner als Anlass für deinen nächsten Stack-Check.</p>
     <a class="cta-btn" href="mailto:info@karolinlinden.de">Kostenloses Erstgespräch anfragen →</a>
+    <a class="cta-btn cta-btn-secondary" href="https://bookings.karolinlinden.de/#/erstgespraech" target="_blank" rel="noopener">Stack-Check-Termin buchen →</a>
   </div>
 </div>
 
@@ -135,37 +182,61 @@ const CATS = [
     {n:'Zendesk',p:55},{n:'Freshdesk',p:15},{n:'Zoho Desk',p:14},{n:'Intercom',p:74}]},
   {id:'dms',label:'Dokumentenmanagement',tools:[
     {n:'DocuWare',p:30},{n:'Microsoft SharePoint',p:5},{n:'Zoho WorkDrive',p:4},{n:'Box Business',p:15}]},
+  {id:'comm',label:'Kommunikation & Telefonie',tools:[
+    {n:'Wildix',p:20},{n:'3CX',p:10},{n:'Placetel',p:15},{n:'Microsoft Teams Calling',p:8},
+    {n:'RingCentral',p:25},{n:'sipgate team',p:13}]},
 ];
 
+// Empfehlung je Kategorie: Zoho für die Business-Apps, Wildix für Kommunikation/Kontaktcenter
+const REC = {
+  crm:     {tool:'Zoho CRM', text:'Ein zentrales CRM für Vertrieb und Kundenverwaltung – verzahnt mit Marketing, Projekten und Buchhaltung statt Insellösung.'},
+  mktg:    {tool:'Zoho Marketing Plus', text:'Kampagnen, Formulare und Zoho CRM in einem Tool statt mehrerer getrennter Marketing-Tools.'},
+  office:  {tool:'Zoho Workplace', text:'E-Mail, Dokumente und Zusammenarbeit aus einer Hand, DSGVO-konform in der EU gehostet.'},
+  project: {tool:'Zoho Projects', text:'Projekte, Aufgaben und Zeiterfassung direkt mit CRM und Buchhaltung verknüpft.'},
+  hr:      {tool:'Zoho People', text:'Personalverwaltung, die mit euren übrigen digitalen Geschäftsabläufen verzahnt ist.'},
+  finance: {tool:'Zoho Books', text:'Rechnungen, Angebote und Buchhaltung automatisiert statt manuell erstellt.'},
+  support: {tool:'Zoho Desk + Wildix Kontaktcenter', text:'Ticketing über Zoho Desk, Anrufe und Kontaktcenter über Wildix – beide Systeme lassen sich direkt verbinden.'},
+  dms:     {tool:'Zoho WorkDrive', text:'Zentrale Dokumentenablage mit klarer Rechte- und Versionsverwaltung.'},
+  comm:    {tool:'Wildix', text:'Telefonie, Video und Chat in einer cloudbasierten Unified-Communications-Lösung, statt mehrerer Einzelanbieter.'},
+};
+
 const state = {};
-const openCats = new Set(); // ← merkt sich, welche Kategorien offen sind
+const openCats = new Set(); // merkt sich, welche Kategorien offen sind
+let customCounter = 0;
 
 CATS.forEach(c => {
-  state[c.id] = {};
-  c.tools.forEach(t => { state[c.id][t.n] = {checked:false, price:t.p, users:1}; });
+  state[c.id] = { tools:{}, custom:[] };
+  c.tools.forEach(t => { state[c.id].tools[t.n] = {checked:false, price:t.p, users:1}; });
 });
 
 function eur(v){ return v.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function catTotal(cat){
+  const named = Object.values(state[cat.id].tools).reduce((s,t)=> s + (t.checked ? t.price*t.users : 0), 0);
+  const custom = state[cat.id].custom.reduce((s,c)=> s + (c.checked ? c.price*c.users : 0), 0);
+  return named + custom;
+}
 
 function render(){
   const container = document.getElementById('categories');
   container.innerHTML = '';
   CATS.forEach(cat => {
-    const catTotal = Object.values(state[cat.id]).reduce((s,t) => s + (t.checked ? t.price*t.users : 0), 0);
-    const isOpen = openCats.has(cat.id); // ← offen lassen, wenn vorher offen
+    const total = catTotal(cat);
+    const isOpen = openCats.has(cat.id); // offen lassen, wenn vorher offen
     const div = document.createElement('div');
     div.className = 'cat-block';
     div.innerHTML = `
       <div class="cat-header" onclick="toggleCat('${cat.id}',this)">
         <span class="cat-title">${cat.label}</span>
         <span style="display:flex;align-items:center;gap:12px">
-          <span class="cat-total">${catTotal > 0 ? eur(catTotal)+'/Mo.' : ''}</span>
+          <span class="cat-total">${total > 0 ? eur(total)+'/Mo.' : ''}</span>
           <span class="chevron" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}">▼</span>
         </span>
       </div>
       <div class="cat-body${isOpen ? ' open' : ''}" id="body-${cat.id}">
         ${cat.tools.map(t => {
-          const s = state[cat.id][t.n];
+          const s = state[cat.id].tools[t.n];
           return `<div class="tool-row">
             <input type="checkbox" class="tool-check" ${s.checked ? 'checked' : ''} onchange="toggle('${cat.id}','${t.n}',this.checked)">
             <span class="tool-name ${s.checked ? 'checked' : ''}">${t.n}</span>
@@ -176,6 +247,17 @@ function render(){
             <span class="tool-subtotal">${s.checked ? eur(s.price*s.users) : ''}</span>
           </div>`;
         }).join('')}
+        ${state[cat.id].custom.map(c => `<div class="tool-row">
+            <input type="checkbox" class="tool-check" ${c.checked ? 'checked' : ''} onchange="toggleCustom('${cat.id}','${c.id}',this.checked)">
+            <input class="custom-name-field" type="text" placeholder="Toolname eingeben" value="${escapeHtml(c.name)}" oninput="setCustomName('${cat.id}','${c.id}',this.value)">
+            <input class="price-field" type="number" value="${c.price}" min="0" step="0.5" onchange="setCustomPrice('${cat.id}','${c.id}',this.value)" ${!c.checked ? 'disabled' : ''}>
+            <span class="field-label">€ im Monat</span>
+            <input class="users-field" type="number" value="${c.users}" min="1" step="1" onchange="setCustomUsers('${cat.id}','${c.id}',this.value)" ${!c.checked ? 'disabled' : ''}>
+            <span class="field-label">Nutzer</span>
+            <span class="tool-subtotal">${c.checked ? eur(c.price*c.users) : ''}</span>
+            <button type="button" class="remove-btn" onclick="removeCustom('${cat.id}','${c.id}')" title="entfernen">✕</button>
+          </div>`).join('')}
+        <button type="button" class="add-tool-btn" onclick="addCustom('${cat.id}')">+ Tool hinzufügen</button>
       </div>`;
     container.appendChild(div);
   });
@@ -190,21 +272,56 @@ function toggleCat(id, header){
 }
 
 function toggle(cat, name, checked){
-  state[cat][name].checked = checked;
-  render(); // ← openCats sorgt dafür, dass die Kategorie offen bleibt
+  state[cat].tools[name].checked = checked;
+  render();
 }
 function setPrice(cat, name, val){
-  state[cat][name].price = parseFloat(val) || 0;
+  state[cat].tools[name].price = parseFloat(val) || 0;
   render();
 }
 function setUsers(cat, name, val){
-  state[cat][name].users = Math.max(1, Math.round(parseFloat(val))) || 1;
+  state[cat].tools[name].users = Math.max(1, Math.round(parseFloat(val))) || 1;
+  render();
+}
+
+function addCustom(cat){
+  customCounter++;
+  state[cat].custom.push({ id:'c'+customCounter, name:'', price:0, users:1, checked:true });
+  openCats.add(cat);
+  render();
+}
+function removeCustom(cat, id){
+  state[cat].custom = state[cat].custom.filter(c => c.id !== id);
+  openCats.add(cat);
+  render();
+}
+function toggleCustom(cat, id, checked){
+  const c = state[cat].custom.find(c => c.id === id);
+  if(c) c.checked = checked;
+  render();
+}
+function setCustomName(cat, id, val){
+  const c = state[cat].custom.find(c => c.id === id);
+  if(c) c.name = val; // kein render() hier, sonst verliert das Textfeld beim Tippen den Fokus
+  updateSummary();
+}
+function setCustomPrice(cat, id, val){
+  const c = state[cat].custom.find(c => c.id === id);
+  if(c) c.price = parseFloat(val) || 0;
+  render();
+}
+function setCustomUsers(cat, id, val){
+  const c = state[cat].custom.find(c => c.id === id);
+  if(c) c.users = Math.max(1, Math.round(parseFloat(val))) || 1;
   render();
 }
 
 function updateSummary(){
   let total = 0, count = 0;
-  CATS.forEach(c => { Object.values(state[c.id]).forEach(t => { if(t.checked){ total += t.price*t.users; count++; } }); });
+  CATS.forEach(c => {
+    Object.values(state[c.id].tools).forEach(t => { if(t.checked){ total += t.price*t.users; count++; } });
+    state[c.id].custom.forEach(t => { if(t.checked){ total += t.price*t.users; count++; } });
+  });
   const spar = total * 0.25;
   document.getElementById('sumMonat').textContent = eur(total);
   document.getElementById('sumJahr').textContent = eur(total*12);
@@ -219,6 +336,47 @@ function updateSummary(){
     document.getElementById('s4').textContent = eur(spar*36);
   } else {
     box.style.display = 'none';
+  }
+  updateRecommendations();
+}
+
+function updateRecommendations(){
+  const box = document.getElementById('recommendBox');
+  const grid = document.getElementById('recommendGrid');
+  const noteEl = document.getElementById('recommendNote');
+  grid.innerHTML = '';
+
+  const activeCats = CATS.filter(cat => {
+    const namedActive = Object.values(state[cat.id].tools).some(t => t.checked);
+    const customActive = state[cat.id].custom.some(t => t.checked);
+    return namedActive || customActive;
+  });
+
+  if(activeCats.length === 0){
+    box.style.display = 'none';
+    return;
+  }
+
+  box.style.display = 'block';
+  activeCats.forEach(cat => {
+    const rec = REC[cat.id];
+    grid.insertAdjacentHTML('beforeend', `<div class="recommend-item"><h4>${cat.label}</h4><div class="tool">${rec.tool}</div><p>${rec.text}</p></div>`);
+  });
+
+  const zohoCount = activeCats.filter(cat => REC[cat.id].tool.startsWith('Zoho')).length;
+  const wildixActive = activeCats.some(cat => REC[cat.id].tool.includes('Wildix'));
+  let note = '';
+  if(zohoCount >= 3){
+    note += 'Diese Bereiche deckt <strong>Zoho One</strong> in einem einzigen Lizenzmodell ab – über 45 Apps zu einem Festpreis pro Nutzer:in. Ab etwa drei genutzten Bereichen lohnt sich meist der Vergleich zu euren aktuellen Einzeltool-Kosten. ';
+  }
+  if(wildixActive){
+    note += 'Telefonie, Video und Kontaktcenter lassen sich mit <strong>Wildix</strong> in einer Cloud-Lösung bündeln, statt mehrere Kommunikationsanbieter parallel zu bezahlen.';
+  }
+  if(note){
+    noteEl.innerHTML = note;
+    noteEl.style.display = 'block';
+  } else {
+    noteEl.style.display = 'none';
   }
 }
 
